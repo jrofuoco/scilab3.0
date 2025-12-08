@@ -150,70 +150,8 @@
         </div>
     </div>
     <script src="js/main.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function() {
-            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-            if (user.username && user.role === 'Admin') {
-                const firstName = user.firstname || 'System';
-                const lastName = user.lastname || 'Admin';
-                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
-                const fullName = firstName + ' ' + lastName;
-                document.getElementById('userName').textContent = fullName;
-                if (document.getElementById('userNameSidebar')) {
-                    document.getElementById('userNameSidebar').textContent = fullName;
-                }
-                if (document.getElementById('userAvatar')) {
-                    document.getElementById('userAvatar').textContent = initials;
-                }
-                loadProfessors();
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        document.getElementById('professorForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-            }
-
-            const formData = {
-                username: document.getElementById('username').value,
-                firstname: document.getElementById('firstname').value,
-                lastname: document.getElementById('lastname').value,
-                email: document.getElementById('email').value,
-                password: password
-            };
-
-            // This will be connected to PHP backend
-            alert('Professor account created successfully!');
-            document.getElementById('professorForm').reset();
-            loadProfessors();
-        });
-
-        function loadProfessors() {
-            // This will be connected to PHP backend
-            const professors = [
-                { id: 1, name: 'Dr. John Smith', email: 'john.smith@university.edu' },
-                { id: 2, name: 'Dr. Jane Doe', email: 'jane.doe@university.edu' },
-                { id: 3, name: 'Dr. Robert Johnson', email: 'robert.johnson@university.edu' }
-            ];
-
-            const list = document.getElementById('professorList');
-            list.innerHTML = professors.map(prof => `
-                <div class="professor-item">
-                    <div class="professor-info">
-                        <div class="professor-name">${prof.name}</div>
-                        <div class="professor-email">${prof.email}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-    </script>
+    <script src="js/admin_manage_professors.js"></script>
 </body>
+
 </html>
 
