@@ -33,8 +33,8 @@ try {
     
     // 1. Create the main reservation
     $reservationQuery = "
-        INSERT INTO reservations (user_id, room_id, reservation_date, start_time, end_time, year, section, professor, status)
-        VALUES (:user_id, :room_id, :reservation_date, :start_time, :end_time, :year, :section, :professor, 'Pending')
+        INSERT INTO reservations (user_id, room_id, reservation_date, start_time, end_time, year, section, professor, professor_approval, admin_approval)
+        VALUES (:user_id, :room_id, :reservation_date, :start_time, :end_time, :year, :section, :professor, 'Approved', 'Pending')
     ";
     
     $resStmt = $pdo->prepare($reservationQuery);
@@ -53,7 +53,42 @@ try {
     
     // 2. Add each resource to appropriate table and deduct stock
     foreach ($data['resources'] as $resource) {
-        if ($resource['type'] === 'chemicals') {
+        if ($resource['type'] === 'rooms') {
+            // Update room status to 'Occupied' for the reservation period
+            $roomQuery = "
+                UPDATE rooms 
+                SET status = 'Occupied'
+                WHERE room_id = :room_id AND status = 'Available'
+            ";
+            
+            $roomStmt = $pdo->prepare($roomQuery);
+            $roomStmt->execute([
+                ':room_id' => $resource['id']
+            ]);
+            
+            if ($roomStmt->rowCount() === 0) {
+                // Check current room status for debugging
+                $checkQuery = "SELECT status FROM rooms WHERE room_id = :room_id";
+                $checkStmt = $pdo->prepare($checkQuery);
+                $checkStmt->execute([':room_id' => $resource['id']]);
+                $currentStatus = $checkStmt->fetchColumn();
+                throw new Exception("Room ID {$resource['id']} is not available. Current status: {$currentStatus}");
+            }
+            
+            // Also update the reservation record with the room_id
+            $updateReservationQuery = "
+                UPDATE reservations 
+                SET room_id = :room_id
+                WHERE reservation_id = :reservation_id
+            ";
+            
+            $updateReservationStmt = $pdo->prepare($updateReservationQuery);
+            $updateReservationStmt->execute([
+                ':room_id' => $resource['id'],
+                ':reservation_id' => $reservationId
+            ]);
+            
+        } else if ($resource['type'] === 'chemicals') {
             // Add to chemical_usage table
             $chemicalQuery = "
                 INSERT INTO chemical_usage (reservation_id, chemical_id, quantity_used)

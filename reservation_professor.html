@@ -222,7 +222,53 @@
             event.target.classList.add('active');
         }
 
-        function loadResources() {
+        async function loadResources() {
+            try {
+                // Fetch rooms
+                const roomsResponse = await fetch('php/get_rooms.php');
+                const roomsData = await roomsResponse.json();
+                
+                // Fetch chemicals
+                const chemicalsResponse = await fetch('php/get_chemicals.php');
+                const chemicalsData = await chemicalsResponse.json();
+                
+                // Fetch lab assets
+                const assetsResponse = await fetch('php/get_lab_assets.php');
+                const assetsData = await assetsResponse.json();
+                
+                if (roomsData.success) {
+                    const rooms = roomsData.data.map(room => ({
+                        id: room.room_id,
+                        name: room.room_name,
+                        quantity: room.status === 'Available' ? 1 : 0,
+                        description: `Capacity: ${room.capacity} - Status: ${room.status}`
+                    }));
+                    renderResources('rooms', rooms);
+                }
+                
+                if (chemicalsData.success) {
+                    const chemicals = chemicalsData.data.map(chemical => ({
+                        id: chemical.chemical_id,
+                        name: chemical.chemical_name,
+                        quantity: chemical.stock_quantity,
+                        description: `${chemical.formula} - ${chemical.stock_quantity} ${chemical.unit}`
+                    }));
+                    renderResources('chemicals', chemicals);
+                }
+                
+                if (assetsData.success) {
+                    renderResources('equipment', assetsData.equipment);
+                    renderResources('glassware', assetsData.glassware);
+                }
+                
+            } catch (error) {
+                console.error('Error loading resources:', error);
+                // Fallback to sample data if API fails
+                loadSampleResources();
+            }
+        }
+        
+        function loadSampleResources() {
             const sampleResources = {
                 rooms: [
                     { id: 1, name: 'Chemistry Laboratory', quantity: 1, description: 'Room 211' },
@@ -374,25 +420,52 @@
             document.getElementById('summaryModal').style.display = 'block';
         }
 
-        function confirmReservation() {
+        async function confirmReservation() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            const professorName = user.firstname + ' ' + user.lastname;
             const formData = {
+                userId: user.user_id || user.id,
+                professor: professorName,
                 date: document.getElementById('date').value,
                 startTime: document.getElementById('startTime').value,
                 endTime: document.getElementById('endTime').value,
                 additionalNote: document.getElementById('additionalNote').value,
-                resources: cart
+                resources: cart.map(item => ({
+                    id: item.id,
+                    type: item.type === 'Laboratory Room' ? 'rooms' : item.type,
+                    quantity: item.quantity
+                }))
             };
 
-            alert('Reservation submitted successfully! Waiting for admin approval.');
-            window.location.href = 'professor_dashboard.html';
+            try {
+                const response = await fetch('php/submit_reservation.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Reservation submitted successfully! Your reservation has been automatically approved and is now pending admin approval.');
+                    window.location.href = 'professor_dashboard.html';
+                } else {
+                    alert('Error submitting reservation: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error submitting reservation:', error);
+                alert('Error submitting reservation. Please try again.');
+            }
         }
 
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
     </script>
-    </main>
-    </div>
+</main>
+</div>
 </body>
 
 </html>
