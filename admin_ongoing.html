@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ongoing Reservations - Admin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .return-item-section {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .return-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .item-name {
+            font-weight: 600;
+            color: #152614;
+        }
+        .item-quantity-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .return-quantity-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .return-quantity-input input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .btn-return-item {
+            padding: 8px 15px;
+            background-color: #31CB00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        .btn-return-item:hover {
+            background-color: #2A7221;
+        }
+        .btn-return-item:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .item-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .status-returned {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-partial {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-pending {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">B</div>
+                <div class="sidebar-brand">
+                    <h1>SciLabReserve</h1>
+                    <p>Lab Management</p>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userAvatar">SA</div>
+                    <div class="user-info-sidebar">
+                        <p class="user-name" id="userNameSidebar">System Admin</p>
+                        <span class="user-role-badge admin">Admin</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-navigation">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="admin_dashboard.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_history.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Reservation History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_pending_professor.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Professor Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_pending_student.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Student Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_ongoing.html" class="nav-link active">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Ongoing Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_inventory.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Inventory</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_manage_professors.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Manage Professors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_unreturned.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Unreturned Items</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-link" onclick="logout(); return false;">
+                    <span class="logout-icon"></span>
+                    <span class="nav-text">Log out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <h1>Ongoing Reservations</h1>
+                <div class="user-info">
+                    <span id="userName">Admin Name</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <a href="admin_dashboard.html" class="back-btn">← Back to Dashboard</a>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Program & Year</th>
+                            <th>Professor</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsTable">
+                        <!-- Data will be loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon"></div>
+                <div class="empty-state-text">No ongoing reservations</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Return Processing Modal -->
+    <div id="returnModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Reservation Details & Return Processing</h3>
+                <button class="close-modal" onclick="closeReturnModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="returnModalContent">
+                <!-- Content will be populated here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeReturnModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        let currentReservation = null;
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Admin') {
+                const firstName = user.firstname || 'System';
+                const lastName = user.lastname || 'Admin';
+                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+                const fullName = firstName + ' ' + lastName;
+                document.getElementById('userName').textContent = fullName;
+                document.getElementById('userNameSidebar').textContent = fullName;
+                document.getElementById('userAvatar').textContent = initials;
+                loadOngoingReservations();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function loadOngoingReservations() {
+            // Sample data for visualization
+            const sampleReservations = [
+                {
+                    id: 1,
+                    user_name: 'Maria Garcia',
+                    year: '2nd Year',
+                    section: 'A',
+                    professor_name: 'Dr. John Smith',
+                    date: '2024-02-23',
+                    start_time: '09:00',
+                    end_time: '11:00',
+                    status: 'Approved'
+                },
+                {
+                    id: 2,
+                    user_name: 'James Wilson',
+                    year: '3rd Year',
+                    section: 'B',
+                    professor_name: 'Dr. Emily Chen',
+                    date: '2024-02-24',
+                    start_time: '14:00',
+                    end_time: '16:00',
+                    status: 'Partially Returned'
+                },
+                {
+                    id: 3,
+                    user_name: 'Sarah Johnson',
+                    year: '1st Year',
+                    section: 'C',
+                    professor_name: 'Dr. Robert Taylor',
+                    date: '2024-02-25',
+                    start_time: '08:00',
+                    end_time: '10:00',
+                    status: 'Approved'
+                },
+                {
+                    id: 4,
+                    user_name: 'Michael Brown',
+                    year: '2nd Year',
+                    section: 'A',
+                    professor_name: 'Dr. Sarah Martinez',
+                    date: '2024-02-26',
+                    start_time: '13:00',
+                    end_time: '15:00',
+                    status: 'Partially Returned'
+                },
+                {
+                    id: 5,
+                    user_name: 'Lisa Anderson',
+                    year: '4th Year',
+                    section: 'D',
+                    professor_name: 'Dr. Michael Johnson',
+                    date: '2024-02-27',
+                    start_time: '10:00',
+                    end_time: '12:00',
+                    status: 'Approved'
+                },
+                {
+                    id: 6,
+                    user_name: 'David Lee',
+                    year: '3rd Year',
+                    section: 'B',
+                    professor_name: 'Dr. Emily Chen',
+                    date: '2024-02-28',
+                    start_time: '09:00',
+                    end_time: '11:00',
+                    status: 'Approved'
+                }
+            ];
+
+            displayReservations(sampleReservations);
+
+            // Uncomment below to use actual API
+            /*
+            fetch('php/get_ongoing_reservations.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayReservations(data.reservations);
+                    } else {
+                        console.error('Error loading reservations:', data.message);
+                        displayReservations([]);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayReservations([]);
+                });
+            */
+        }
+
+        function displayReservations(reservations) {
+            const tbody = document.getElementById('reservationsTable');
+            if (reservations.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                tbody.innerHTML = '';
+            } else {
+                document.getElementById('emptyState').style.display = 'none';
+                tbody.innerHTML = reservations.map(res => {
+                    const statusClass = res.status === 'Partially Returned' ? 'status-partial' : 
+                                      res.status === 'Approved' ? 'status-pending' : 'status-returned';
+                    return `
+                        <tr>
+                            <td>${res.user_name || 'N/A'}</td>
+                            <td>${res.year ? res.year + (res.section ? ' - ' + res.section : '') : 'N/A'}</td>
+                            <td>${res.professor_name || 'N/A'}</td>
+                            <td>${res.date}</td>
+                            <td>${res.start_time} - ${res.end_time}</td>
+                            <td><span class="item-status ${statusClass}">${res.status}</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="viewReservation(${res.id})">View</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        function viewReservation(reservationId) {
+            fetch(`php/get_reservation_details.php?id=${reservationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentReservation = data.reservation;
+                        showReturnModal(data.reservation);
+                    } else {
+                        alert('Error loading reservation details: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error loading reservation details');
+                });
+        }
+
+        function showReturnModal(reservation) {
+            const modalContent = document.getElementById('returnModalContent');
+            
+            // Calculate return status for each item
+            const itemsHtml = reservation.items.map(item => {
+                const returnedQty = item.returned_quantity || 0;
+                const remainingQty = item.quantity - returnedQty;
+                const isFullyReturned = returnedQty >= item.quantity;
+                const isPartiallyReturned = returnedQty > 0 && returnedQty < item.quantity;
+                
+                let statusBadge = '';
+                if (isFullyReturned) {
+                    statusBadge = '<span class="item-status status-returned">Fully Returned</span>';
+                } else if (isPartiallyReturned) {
+                    statusBadge = '<span class="item-status status-partial">Partially Returned</span>';
+                } else {
+                    statusBadge = '<span class="item-status status-pending">Not Returned</span>';
+                }
+
+                return `
+                    <div class="return-item-section">
+                        <div class="return-item-header">
+                            <div>
+                                <div class="item-name">${item.name} (${item.type})</div>
+                                <div class="item-quantity-info">
+                                    Borrowed: ${item.quantity} | Returned: ${returnedQty} | Remaining: ${remainingQty}
+                                </div>
+                            </div>
+                            ${statusBadge}
+                        </div>
+                        ${!isFullyReturned ? `
+                        <div class="return-quantity-input">
+                            <label>Return Quantity:</label>
+                            <input type="number" 
+                                   id="returnQty_${item.id}" 
+                                   min="1" 
+                                   max="${remainingQty}" 
+                                   value="${remainingQty}"
+                                   onchange="validateReturnQuantity(${item.id}, ${remainingQty})">
+                            <button class="btn-return-item" 
+                                    onclick="processItemReturn(${reservation.id}, ${item.id}, ${item.resource_id}, ${remainingQty})">
+                                Returned
+                            </button>
+                        </div>
+                        ` : '<div style="color: #31CB00; font-weight: 600;">✓ All items returned</div>'}
+                    </div>
+                `;
+            }).join('');
+
+            modalContent.innerHTML = `
+                <div class="summary-item">
+                    <div class="summary-label">Student Information:</div>
+                    <div class="summary-value">${reservation.user_name}</div>
+                </div>
+                ${reservation.year ? `
+                <div class="summary-item">
+                    <div class="summary-label">Program & Year:</div>
+                    <div class="summary-value">${reservation.year}${reservation.section ? ' - ' + reservation.section : ''}</div>
+                </div>
+                ` : ''}
+                ${reservation.professor_name ? `
+                <div class="summary-item">
+                    <div class="summary-label">Professor:</div>
+                    <div class="summary-value">${reservation.professor_name}</div>
+                </div>
+                ` : ''}
+                <div class="summary-item">
+                    <div class="summary-label">Reservation Date:</div>
+                    <div class="summary-value">${reservation.date}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Reservation Time:</div>
+                    <div class="summary-value">${reservation.start_time} - ${reservation.end_time}</div>
+                </div>
+                ${reservation.additional_note ? `
+                <div class="summary-item">
+                    <div class="summary-label">Additional Note:</div>
+                    <div class="summary-value">${reservation.additional_note}</div>
+                </div>
+                ` : ''}
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+                    <h4 style="color: #152614; margin-bottom: 15px;">Borrowed Items - Return Processing</h4>
+                    ${itemsHtml}
+                </div>
+            `;
+            
+            document.getElementById('returnModal').style.display = 'block';
+        }
+
+        function validateReturnQuantity(itemId, maxQty) {
+            const input = document.getElementById(`returnQty_${itemId}`);
+            const value = parseInt(input.value);
+            if (value < 1) {
+                input.value = 1;
+            } else if (value > maxQty) {
+                input.value = maxQty;
+            }
+        }
+
+        function processItemReturn(reservationId, itemId, resourceId, maxQty) {
+            const input = document.getElementById(`returnQty_${itemId}`);
+            const returnQty = parseInt(input.value);
+            
+            if (returnQty < 1 || returnQty > maxQty) {
+                alert(`Please enter a valid quantity between 1 and ${maxQty}`);
+                return;
+            }
+
+            if (!confirm(`Process return of ${returnQty} item(s)? This will add them back to inventory.`)) {
+                return;
+            }
+
+            fetch('php/process_item_return.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    reservation_id: reservationId,
+                    item_id: itemId,
+                    resource_id: resourceId,
+                    return_quantity: returnQty
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Item return processed successfully!');
+                    loadOngoingReservations();
+                    // Refresh the modal
+                    viewReservation(reservationId);
+                } else {
+                    alert('Error processing return: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error processing return');
+            });
+        }
+
+        function closeReturnModal() {
+            document.getElementById('returnModal').style.display = 'none';
+            currentReservation = null;
+        }
+    </script>
+</body>
+</html>

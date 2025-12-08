@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Reservation - Student</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">B</div>
+                <div class="sidebar-brand">
+                    <h1>SciLabReserve</h1>
+                    <p>Lab Management</p>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userAvatar">JC</div>
+                    <div class="user-info-sidebar">
+                        <p class="user-name" id="userName">Jared Cuentas</p>
+                        <span class="user-role-badge student">Student</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-navigation">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="student_dashboard.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reservation_student.html" class="nav-link active">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">New Reservation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="student_history.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Reservation History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="student_pending.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Pending Approval</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="student_approved.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Approved Reservations</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-link" onclick="logout(); return false;">
+                    <span class="logout-icon"></span>
+                    <span class="nav-text">Log out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <h1>Create New Reservation</h1>
+                <div class="user-info">
+                    <span id="userNameHeader">Student Name</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+            <!-- <a href="student_dashboard.html" class="back-btn">← Back to Dashboard</a> -->
+            <div class="reservation-container">
+                <div class="form-section">
+                    <h3 class="section-title">Available Resources</h3>
+                    <div class="inventory-tabs">
+                        <button class="tab-btn active" onclick="switchTab('chemicals')">Chemicals</button>
+                        <button class="tab-btn" onclick="switchTab('equipment')">Equipment</button>
+                        <button class="tab-btn" onclick="switchTab('glassware')">Glassware</button>
+                    </div>
+                    
+                    <div id="chemicals" class="tab-content active">
+                        <div class="resource-grid" id="chemicalsGrid">
+                            <!-- Resources will be loaded dynamically -->
+                        </div>
+                    </div>
+                    <div id="equipment" class="tab-content">
+                        <div class="resource-grid" id="equipmentGrid">
+                            <!-- Resources will be loaded dynamically -->
+                        </div>
+                    </div>
+                    <div id="glassware" class="tab-content">
+                        <div class="resource-grid" id="glasswareGrid">
+                            <!-- Resources will be loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cart-section">
+                    <h3 class="section-title">Reservation Cart</h3>
+                    <div id="cartItems">
+                        <div class="empty-state">
+                            <div class="empty-state-text">Your cart is empty. Add resources to get started.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Reservation Details</h3>
+                    <form id="reservationForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date">Date *</label>
+                                <input type="date" id="date" name="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="startTime">Start Time *</label>
+                                <input type="time" id="startTime" name="startTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endTime">End Time *</label>
+                                <input type="time" id="endTime" name="endTime" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="year">Year *</label>
+                                <select id="year" name="year" required>
+                                    <option value="">Select Year</option>
+                                    <option value="1st Year">1st Year</option>
+                                    <option value="2nd Year">2nd Year</option>
+                                    <option value="3rd Year">3rd Year</option>
+                                    <option value="4th Year">4th Year</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="section">Section *</label>
+                                <input type="text" id="section" name="section" placeholder="e.g., A, B, C" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="professor">Professor *</label>
+                                <select id="professor" name="professor" required>
+                                    <option value="">Select Professor</option>
+                                    <!-- Professors will be loaded dynamically -->
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">Submit Reservation</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Summary Modal -->
+    <div id="summaryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Reservation Summary</h3>
+                <button class="close-modal" onclick="closeModal('summaryModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="summaryContent">
+                <!-- Summary will be populated here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('summaryModal')">Cancel</button>
+                <button class="btn-confirm" onclick="confirmReservation()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/reservation.js"></script>
+    <script src="js/resources.js"></script>
+    <script>
+        let cart = [];
+        
+        window.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Student') {
+                document.getElementById('userNameHeader').textContent = user.firstname + ' ' + user.lastname;
+                document.getElementById('userName').textContent = user.firstname + ' ' + user.lastname;
+                // Update avatar
+                const initials = (user.firstname.charAt(0) + user.lastname.charAt(0)).toUpperCase();
+                document.getElementById('userAvatar').textContent = initials;
+                loadResources();
+                loadProfessors();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function loadResources() {
+            // Load resources from database
+            const resources = await loadResourcesFromDatabase();
+            
+            renderResources('chemicals', resources.chemicals);
+            renderResources('equipment', resources.equipment);
+            renderResources('glassware', resources.glassware);
+        }
+
+        function addToCart(id, name, type, available) {
+            const existingItem = cart.find(item => item.id === id);
+            if (existingItem) {
+                if (existingItem.quantity < available) {
+                    existingItem.quantity++;
+                } else {
+                    alert('Maximum available quantity reached');
+                    return;
+                }
+            } else {
+                cart.push({ id, name, type, quantity: 1, available });
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-state"><div class="empty-state-text">Your cart is empty. Add resources to get started.</div></div>';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-type">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</div>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="decreaseQuantity(${index})">-</button>
+                        <span class="quantity-display">${item.quantity}</span>
+                        <button class="quantity-btn" onclick="increaseQuantity(${index})">+</button>
+                    </div>
+                    <button class="remove-item-btn" onclick="removeFromCart(${index})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function increaseQuantity(index) {
+            if (cart[index].quantity < cart[index].available) {
+                cart[index].quantity++;
+                updateCart();
+            } else {
+                alert('Maximum available quantity reached');
+            }
+        }
+
+        function decreaseQuantity(index) {
+            if (cart[index].quantity > 1) {
+                cart[index].quantity--;
+                updateCart();
+            } else {
+                removeFromCart(index);
+            }
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function loadProfessors() {
+            // This will be connected to PHP backend
+            // For now, using sample data
+            const professors = [
+                { id: 1, name: 'Dr. John Smith' },
+                { id: 2, name: 'Dr. Jane Doe' },
+                { id: 3, name: 'Dr. Robert Johnson' }
+            ];
+
+            const select = document.getElementById('professor');
+            select.innerHTML = '<option value="">Select Professor</option>' + 
+                professors.map(prof => `<option value="${prof.id}">${prof.name}</option>`).join('');
+        }
+
+        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (cart.length === 0) {
+                alert('Please add at least one resource to your cart');
+                return;
+            }
+
+            const formData = {
+                date: document.getElementById('date').value,
+                startTime: document.getElementById('startTime').value,
+                endTime: document.getElementById('endTime').value,
+                year: document.getElementById('year').value,
+                section: document.getElementById('section').value,
+                professor: document.getElementById('professor').value,
+                professorName: document.getElementById('professor').options[document.getElementById('professor').selectedIndex].text
+            };
+
+            showSummary(formData);
+        });
+
+        function showSummary(formData) {
+            const summaryContent = document.getElementById('summaryContent');
+            summaryContent.innerHTML = `
+                <div class="summary-item">
+                    <div class="summary-label">Date:</div>
+                    <div class="summary-value">${formData.date}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Time:</div>
+                    <div class="summary-value">${formData.startTime} - ${formData.endTime}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Year & Section:</div>
+                    <div class="summary-value">${formData.year} - ${formData.section}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Professor:</div>
+                    <div class="summary-value">${formData.professorName}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Resources:</div>
+                    <div class="summary-value">
+                        ${cart.map(item => `${item.name} (${item.quantity}x)`).join('<br>')}
+                    </div>
+                </div>
+            `;
+            document.getElementById('summaryModal').style.display = 'block';
+        }
+
+        async function confirmReservation() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            
+            if (!user.id) {
+                alert('Error: User not found. Please log in again.');
+                return;
+            }
+            
+            const formData = {
+                userId: user.id,
+                date: document.getElementById('date').value,
+                startTime: document.getElementById('startTime').value,
+                endTime: document.getElementById('endTime').value,
+                year: document.getElementById('year').value,
+                section: document.getElementById('section').value,
+                professor: document.getElementById('professor').value,
+                resources: cart
+            };
+
+            try {
+                const response = await fetch('php/submit_reservation.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Reservation submitted successfully! Reservation ID: ' + result.reservationId);
+                    closeModal('summaryModal');
+                    window.location.href = 'student_dashboard.html';
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error submitting reservation:', error);
+                alert('Error submitting reservation. Please try again.');
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+
+

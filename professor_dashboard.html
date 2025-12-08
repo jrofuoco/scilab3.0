@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Dashboard - Scilab 3.0 - Science Laboratory Reservation System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">B</div>
+                <div class="sidebar-brand">
+                    <h1>SciLabReserve</h1>
+                    <p>Lab Management</p>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userAvatar">NC</div>
+                    <div class="user-info-sidebar">
+                        <p class="user-name" id="userName">Nero Cuentas</p>
+                        <span class="user-role-badge professor">Professor</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-navigation">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="professor_dashboard.html" class="nav-link active">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reservation_professor.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">New Reservation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_history.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Reservation History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_review.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Student Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_approved.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Approved Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_unreturned.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Students with Unreturned Items</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-link" onclick="logout(); return false;">
+                    <span class="logout-icon"></span>
+                    <span class="nav-text">Log out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <h1>Professor Dashboard</h1>
+                <div class="user-info">
+                    <span id="userNameHeader">Professor Name</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <h2 class="dashboard-title">Welcome, Professor!</h2>
+                <div class="cards-grid">
+                    <div class="dashboard-card" onclick="navigateTo('reservation_professor.html')">
+                        <div class="card-icon"></div>
+                        <div class="card-title">Create New Reservation</div>
+                        <div class="card-description">Make a new reservation for laboratory rooms, chemicals, equipment, or glassware</div>
+                    </div>
+                    <div class="dashboard-card" onclick="navigateTo('professor_history.html')">
+                        <div class="card-icon"></div>
+                        <div class="card-title">List of History Reservation</div>
+                        <div class="card-description">View all your past reservations</div>
+                    </div>
+                    <div class="dashboard-card" onclick="navigateTo('professor_review.html')">
+                        <div class="card-icon"></div>
+                        <div class="card-title">Initial Review for Approval</div>
+                        <div class="card-description">Review and approve student reservation requests</div>
+                    </div>
+                    <div class="dashboard-card" onclick="navigateTo('professor_pending.html')">
+                        <div class="card-icon"></div>
+                        <div class="card-title">Pending Approval</div>
+                        <div class="card-description">Reservations waiting for approval</div>
+                    </div>
+                    <div class="dashboard-card" onclick="navigateTo('professor_approved.html')">
+                        <div class="card-icon"></div>
+                        <div class="card-title">Approved Reservation</div>
+                        <div class="card-description">View your approved or declined reservations</div>
+                    </div>
+                    <div class="dashboard-card" onclick="navigateTo('professor_unreturned.html')">
+                        <div class="card-icon"></div>
+                        <div class="card-title">Students with Unreturned Items</div>
+                        <div class="card-description">View students with unreturned items from your classes</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/main.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Professor') {
+                const firstName = user.firstname || 'Professor';
+                const lastName = user.lastname || 'User';
+                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+                const fullName = firstName + ' ' + lastName;
+                document.getElementById('userName').textContent = fullName;
+                document.getElementById('userNameHeader').textContent = fullName;
+                document.getElementById('userAvatar').textContent = initials;
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approved Reservations - Student</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">B</div>
+                <div class="sidebar-brand">
+                    <h1>SciLabReserve</h1>
+                    <p>Lab Management</p>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userAvatar">JC</div>
+                    <div class="user-info-sidebar">
+                        <p class="user-name" id="userName">Jared Cuentas</p>
+                        <span class="user-role-badge student">Student</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-navigation">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="student_dashboard.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reservation_student.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">New Reservation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="student_history.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Reservation History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="student_pending.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Pending Approval</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="student_approved.html" class="nav-link active">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Approved Reservations</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-link" onclick="logout(); return false;">
+                    <span class="logout-icon"></span>
+                    <span class="nav-text">Log out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+            <h1>Approved/Declined Reservations</h1>
+            <div class="user-info">
+                <span id="userName">Student Name</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <div class="dashboard-content">
+            <!-- <a href="student_dashboard.html" class="back-btn">← Back to Dashboard</a> -->
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Resources</th>
+                            <th>Year & Section</th>
+                            <th>Professor</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsTable">
+                        <!-- Data will be loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">✅</div>
+                <div class="empty-state-text">No approved or declined reservations</div>
+            </div>
+        </main>
+    </div>
+    <script src="js/main.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Student') {
+                const fullName = user.firstname + ' ' + user.lastname;
+                document.getElementById('userName').textContent = fullName;
+                document.getElementById('userAvatar').textContent = (user.firstname.charAt(0) + user.lastname.charAt(0)).toUpperCase();
+                loadApprovedReservations();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function loadApprovedReservations() {
+            // This will be connected to PHP backend
+            const reservations = [
+                {
+                    id: 4,
+                    date: '2024-02-05',
+                    startTime: '13:00',
+                    endTime: '15:00',
+                    resources: 'Centrifuge (1x), Beaker 250ml (3x)',
+                    year: '2nd Year',
+                    section: 'A',
+                    professor: 'Dr. John Smith',
+                    status: 'Approved'
+                },
+                {
+                    id: 5,
+                    date: '2024-02-10',
+                    startTime: '09:00',
+                    endTime: '11:00',
+                    resources: 'Hot Plate (2x)',
+                    year: '2nd Year',
+                    section: 'A',
+                    professor: 'Dr. Jane Doe',
+                    status: 'Declined'
+                }
+            ];
+
+            const tbody = document.getElementById('reservationsTable');
+            if (reservations.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                tbody.innerHTML = '';
+            } else {
+                document.getElementById('emptyState').style.display = 'none';
+                tbody.innerHTML = reservations.map(res => {
+                    const statusColor = res.status === 'Approved' ? '#31CB00' : '#f44336';
+                    return `
+                        <tr>
+                            <td>${res.date}</td>
+                            <td>${res.startTime} - ${res.endTime}</td>
+                            <td>${res.resources}</td>
+                            <td>${res.year} - ${res.section}</td>
+                            <td>${res.professor}</td>
+                            <td><span style="color: ${statusColor}; font-weight: 600;">${res.status}</span></td>
+                            <td>
+                                <button class="btn btn-view" onclick="viewDetails(${res.id})">View</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        function viewDetails(id) {
+            alert('Viewing reservation details for ID: ' + id);
+        }
+    </script>
+</body>
+</html>
+

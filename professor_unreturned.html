@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students with Unreturned Items - Professor</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .student-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+        }
+        .student-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .student-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #152614;
+            margin-bottom: 5px;
+        }
+        .student-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .unreturned-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+        }
+        .item-info {
+            flex: 1;
+        }
+        .item-name {
+            font-weight: 600;
+            color: #152614;
+            margin-bottom: 5px;
+        }
+        .item-details {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .unreturned-qty {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+        
+    </style>
+</head>
+<body>
+    
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">B</div>
+                <div class="sidebar-brand">
+                    <h1>SciLabReserve</h1>
+                    <p>Lab Management</p>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userAvatar">NC</div>
+                    <div class="user-info-sidebar">
+                        <p class="user-name" id="userNameSidebar">Nero Cuentas</p>
+                        <span class="user-role-badge professor">Professor</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-navigation">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="professor_dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reservation_professor.html" class="nav-link">
+                            <span class="nav-icon">➕</span>
+                            <span class="nav-text">New Reservation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_history.html" class="nav-link">
+                            <span class="nav-icon">🕐</span>
+                            <span class="nav-text">Reservation History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_review.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span class="nav-text">Student Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_approved.html" class="nav-link">
+                            <span class="nav-icon">✓</span>
+                            <span class="nav-text">Approved Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_unreturned.html" class="nav-link active">
+                            <span class="nav-icon">⚠️</span>
+                            <span class="nav-text">Students with Unreturned Items</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-link" onclick="logout(); return false;">
+                    <span class="logout-icon">→</span>
+                    <span class="nav-text">Log out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <h1>Students with Unreturned Items</h1>
+                <div class="user-info">
+                    <span id="userName">Professor Name</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <a href="professor_dashboard.html" class="back-btn">← Back to Dashboard</a>
+        
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Year & Section</th>
+                            <th>Item Name</th>
+                            <th>Type</th>
+                            <th>Borrowed</th>
+                            <th>Returned</th>
+                            <th>Unreturned</th>
+                            <th>Reservation Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsTable">
+                        <!-- Data will be loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="itemsEmptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon"></div>
+                <div class="empty-state-text">No students with unreturned items</div>
+            </div>
+
+            <div id="studentsList" style="margin-top: 30px;">
+                <!-- Students with unreturned items will be displayed here -->
+            </div>
+            <div id="studentsEmptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon"></div>
+                <div class="empty-state-text">No students with unreturned items</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Professor') {
+                const firstName = user.firstname || 'Professor';
+                const lastName = user.lastname || 'User';
+                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+                const fullName = firstName + ' ' + lastName;
+                document.getElementById('userName').textContent = fullName;
+                if (document.getElementById('userNameSidebar')) {
+                    document.getElementById('userNameSidebar').textContent = fullName;
+                }
+                if (document.getElementById('userAvatar')) {
+                    document.getElementById('userAvatar').textContent = initials;
+                }
+                loadUnreturnedItems();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function loadUnreturnedItems() {
+            // Sample data for visualization
+            const sampleData = {
+                items: [
+                    {
+                        id: 1,
+                        reservation_id: 3,
+                        resource_id: 2,
+                        resource_name: 'Test Tube',
+                        resource_type: 'Glassware',
+                        borrowed_quantity: 10,
+                        returned_quantity: 7,
+                        unreturned_quantity: 3,
+                        reservation_date: '2024-02-17',
+                        reservation_time: '08:00 - 10:00',
+                        student_name: 'James Wilson',
+                        student_id: 3,
+                        year: '3rd Year',
+                        section: 'B'
+                    },
+                    {
+                        id: 2,
+                        reservation_id: 3,
+                        resource_id: 1,
+                        resource_name: 'Beaker 250ml',
+                        resource_type: 'Glassware',
+                        borrowed_quantity: 5,
+                        returned_quantity: 3,
+                        unreturned_quantity: 2,
+                        reservation_date: '2024-02-17',
+                        reservation_time: '08:00 - 10:00',
+                        student_name: 'James Wilson',
+                        student_id: 3,
+                        year: '3rd Year',
+                        section: 'B'
+                    },
+                    {
+                        id: 3,
+                        reservation_id: 4,
+                        resource_id: 2,
+                        resource_name: 'Test Tube',
+                        resource_type: 'Glassware',
+                        borrowed_quantity: 15,
+                        returned_quantity: 12,
+                        unreturned_quantity: 3,
+                        reservation_date: '2024-02-18',
+                        reservation_time: '13:00 - 15:00',
+                        student_name: 'Michael Brown',
+                        student_id: 4,
+                        year: '2nd Year',
+                        section: 'A'
+                    }
+                ],
+                students_with_unreturned: [
+                    {
+                        student_id: 3,
+                        student_name: 'James Wilson',
+                        student_email: 'james.wilson@university.edu',
+                        year: '3rd Year',
+                        section: 'B',
+                        professor_name: 'Dr. Emily Chen',
+                        professor_email: 'emily.chen@university.edu',
+                        items: [
+                            {
+                                id: 1,
+                                reservation_id: 3,
+                                resource_id: 2,
+                                resource_name: 'Test Tube',
+                                resource_type: 'Glassware',
+                                borrowed_quantity: 10,
+                                returned_quantity: 7,
+                                unreturned_quantity: 3,
+                                reservation_date: '2024-02-17',
+                                reservation_time: '08:00 - 10:00'
+                            },
+                            {
+                                id: 2,
+                                reservation_id: 3,
+                                resource_id: 1,
+                                resource_name: 'Beaker 250ml',
+                                resource_type: 'Glassware',
+                                borrowed_quantity: 5,
+                                returned_quantity: 3,
+                                unreturned_quantity: 2,
+                                reservation_date: '2024-02-17',
+                                reservation_time: '08:00 - 10:00'
+                            }
+                        ]
+                    },
+                    {
+                        student_id: 4,
+                        student_name: 'Michael Brown',
+                        student_email: 'michael.brown@university.edu',
+                        year: '2nd Year',
+                        section: 'A',
+                        professor_name: 'Dr. Emily Chen',
+                        professor_email: 'emily.chen@university.edu',
+                        items: [
+                            {
+                                id: 3,
+                                reservation_id: 4,
+                                resource_id: 2,
+                                resource_name: 'Test Tube',
+                                resource_type: 'Glassware',
+                                borrowed_quantity: 15,
+                                returned_quantity: 12,
+                                unreturned_quantity: 3,
+                                reservation_date: '2024-02-18',
+                                reservation_time: '13:00 - 15:00'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            displayItems(sampleData.items);
+            displayStudents(sampleData.students_with_unreturned);
+
+            // Uncomment below to use actual API
+            /*
+            fetch('php/get_professor_unreturned_items.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayItems(data.items);
+                        displayStudents(data.students_with_unreturned);
+                    } else {
+                        console.error('Error loading unreturned items:', data.message);
+                        displayItems([]);
+                        displayStudents([]);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayItems([]);
+                    displayStudents([]);
+                });
+            */
+        }
+
+        function displayItems(items) {
+            const tbody = document.getElementById('itemsTable');
+            if (items.length === 0) {
+                document.getElementById('itemsEmptyState').style.display = 'block';
+                tbody.innerHTML = '';
+            } else {
+                document.getElementById('itemsEmptyState').style.display = 'none';
+                tbody.innerHTML = items.map(item => `
+                    <tr>
+                        <td>${item.student_name || 'N/A'}</td>
+                        <td>${item.year ? item.year + (item.section ? ' - ' + item.section : '') : 'N/A'}</td>
+                        <td>${item.resource_name}</td>
+                        <td>${item.resource_type}</td>
+                        <td>${item.borrowed_quantity}</td>
+                        <td>${item.returned_quantity}</td>
+                        <td class="unreturned-qty">${item.unreturned_quantity}</td>
+                        <td>${item.reservation_date}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function displayStudents(students) {
+            const container = document.getElementById('studentsList');
+            if (students.length === 0) {
+                document.getElementById('studentsEmptyState').style.display = 'block';
+                container.innerHTML = '';
+            } else {
+                document.getElementById('studentsEmptyState').style.display = 'none';
+                container.innerHTML = `
+                    <h3 style="color: #152614; margin-bottom: 20px;">Students Grouped by Student</h3>
+                    ${students.map(student => {
+                    const itemsHtml = student.items.map(item => `
+                        <div class="unreturned-item">
+                            <div class="item-info">
+                                <div class="item-name">${item.resource_name} (${item.resource_type})</div>
+                                <div class="item-details">
+                                    Borrowed: ${item.borrowed_quantity} | Returned: ${item.returned_quantity} | 
+                                    <span class="unreturned-qty">Unreturned: ${item.unreturned_quantity}</span> | 
+                                    Reservation: ${item.reservation_date} ${item.reservation_time}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    return `
+                        <div class="student-section">
+                            <div class="student-header">
+                                <div class="student-name">${student.student_name}</div>
+                                <div class="student-info">
+                                    ${student.year ? student.year + (student.section ? ' - ' + student.section : '') : 'N/A'} | 
+                                    Email: ${student.student_email}
+                                </div>
+                            </div>
+                            ${itemsHtml}
+                        </div>
+                    `;
+                }).join('')}
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
+

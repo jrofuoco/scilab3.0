@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation History - Admin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .receipt-item {
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            border-left: 3px solid #31CB00;
+        }
+        .receipt-item.unreturned {
+            border-left-color: #ff9800;
+            background: #fff3cd;
+        }
+        .item-return-status {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            color: #666;
+        }
+        .unreturned-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: #ff9800;
+            color: white;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-partial {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-returned {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">B</div>
+                <div class="sidebar-brand">
+                    <h1>SciLabReserve</h1>
+                    <p>Lab Management</p>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userAvatar">SA</div>
+                    <div class="user-info-sidebar">
+                        <p class="user-name" id="userNameSidebar">System Admin</p>
+                        <span class="user-role-badge admin">Admin</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-navigation">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="admin_dashboard.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_history.html" class="nav-link active">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Reservation History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_pending_professor.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Professor Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_pending_student.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Student Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_ongoing.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Ongoing Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_inventory.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Inventory</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_manage_professors.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Manage Professors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_unreturned.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Unreturned Items</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-link" onclick="logout(); return false;">
+                    <span class="logout-icon"></span>
+                    <span class="nav-text">Log out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <h1>Reservation History</h1>
+                <div class="user-info">
+                    <span id="userName">Admin Name</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <a href="admin_dashboard.html" class="back-btn">← Back to Dashboard</a>
+            <div class="search-bar">
+                <input type="date" id="searchDate" placeholder="Search by date">
+                <button onclick="searchByDate()">Search</button>
+                <button onclick="clearSearch()">Clear</button>
+            </div>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>User</th>
+                            <th>User Type</th>
+                            <th>Resources</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsTable">
+                        <!-- Data will be loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon"></div>
+                <div class="empty-state-text">No reservations found</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div id="receiptModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Reservation Receipt</h3>
+                <button class="close-modal" onclick="closeReceiptModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="receiptContent">
+                <!-- Receipt content will be populated here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeReceiptModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Admin') {
+                const firstName = user.firstname || 'System';
+                const lastName = user.lastname || 'Admin';
+                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+                const fullName = firstName + ' ' + lastName;
+                document.getElementById('userName').textContent = fullName;
+                if (document.getElementById('userNameSidebar')) {
+                    document.getElementById('userNameSidebar').textContent = fullName;
+                }
+                if (document.getElementById('userAvatar')) {
+                    document.getElementById('userAvatar').textContent = initials;
+                }
+                loadReservations();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function loadReservations(searchDate = null) {
+            // Sample data for visualization
+            const sampleReservations = [
+                {
+                    id: 1,
+                    date: '2024-02-15',
+                    start_time: '09:00',
+                    end_time: '11:00',
+                    user_name: 'Maria Garcia',
+                    user_role: 'Student',
+                    resources: 'Beaker 250ml (5x), Test Tube (10x), Sodium Chloride (2x)',
+                    status: 'Completed'
+                },
+                {
+                    id: 2,
+                    date: '2024-02-16',
+                    start_time: '14:00',
+                    end_time: '16:00',
+                    user_name: 'Dr. John Smith',
+                    user_role: 'Professor',
+                    resources: 'Laboratory Room A (1x), Microscope (3x), Centrifuge (1x)',
+                    status: 'Completed'
+                },
+                {
+                    id: 3,
+                    date: '2024-02-17',
+                    start_time: '08:00',
+                    end_time: '10:00',
+                    user_name: 'James Wilson',
+                    user_role: 'Student',
+                    resources: 'Flask 500ml (3x), Hydrochloric Acid (1x), Hot Plate (1x)',
+                    status: 'Partially Returned'
+                },
+                {
+                    id: 4,
+                    date: '2024-02-18',
+                    start_time: '13:00',
+                    end_time: '15:00',
+                    user_name: 'Sarah Johnson',
+                    user_role: 'Student',
+                    resources: 'Test Tube (15x), Beaker 250ml (4x)',
+                    status: 'Completed'
+                },
+                {
+                    id: 5,
+                    date: '2024-02-19',
+                    start_time: '10:00',
+                    end_time: '12:00',
+                    user_name: 'Dr. Emily Chen',
+                    user_role: 'Professor',
+                    resources: 'Laboratory Room B (1x), Microscope (2x)',
+                    status: 'Completed'
+                },
+                {
+                    id: 6,
+                    date: '2024-02-20',
+                    start_time: '09:00',
+                    end_time: '11:00',
+                    user_name: 'Michael Brown',
+                    user_role: 'Student',
+                    resources: 'Sodium Hydroxide (1x), Flask 500ml (2x), Test Tube (8x)',
+                    status: 'Completed'
+                },
+                {
+                    id: 7,
+                    date: '2024-02-21',
+                    start_time: '14:00',
+                    end_time: '16:00',
+                    user_name: 'Lisa Anderson',
+                    user_role: 'Student',
+                    resources: 'Beaker 250ml (6x), Centrifuge (1x)',
+                    status: 'Partially Returned'
+                },
+                {
+                    id: 8,
+                    date: '2024-02-22',
+                    start_time: '08:00',
+                    end_time: '10:00',
+                    user_name: 'Dr. Robert Taylor',
+                    user_role: 'Professor',
+                    resources: 'Research Lab (1x), Microscope (4x), Hot Plate (2x)',
+                    status: 'Completed'
+                }
+            ];
+
+            let filtered = sampleReservations;
+            if (searchDate) {
+                filtered = sampleReservations.filter(res => res.date === searchDate);
+            }
+
+            displayReservations(filtered);
+
+            // Uncomment below to use actual API
+            /*
+            let url = 'php/get_reservations.php?type=history';
+            if (searchDate) {
+                url += '&date=' + searchDate;
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayReservations(data.reservations);
+                    } else {
+                        console.error('Error loading reservations:', data.message);
+                        displayReservations([]);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayReservations([]);
+                });
+            */
+        }
+
+        function displayReservations(reservations) {
+            const tbody = document.getElementById('reservationsTable');
+            if (reservations.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                tbody.innerHTML = '';
+            } else {
+                document.getElementById('emptyState').style.display = 'none';
+                tbody.innerHTML = reservations.map(res => {
+                    const statusClass = res.status === 'Partially Returned' ? 'status-partial' : 
+                                      res.status === 'Completed' ? 'status-completed' : 'status-returned';
+                    return `
+                        <tr>
+                            <td>${res.date}</td>
+                            <td>${res.start_time} - ${res.end_time}</td>
+                            <td>${res.user_name || 'N/A'}</td>
+                            <td>${res.user_role || 'N/A'}</td>
+                            <td>${res.resources || 'N/A'}</td>
+                            <td><span class="status-badge ${statusClass}">${res.status}</span></td>
+                            <td>
+                                <button class="btn btn-view" onclick="viewDetails(${res.id})">View</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        function searchByDate() {
+            const date = document.getElementById('searchDate').value;
+            loadReservations(date);
+        }
+
+        function clearSearch() {
+            document.getElementById('searchDate').value = '';
+            loadReservations();
+        }
+
+        function viewDetails(reservationId) {
+            fetch(`php/get_reservation_details.php?id=${reservationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showReceipt(data.reservation);
+                    } else {
+                        alert('Error loading reservation details: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error loading reservation details');
+                });
+        }
+
+        function showReceipt(reservation) {
+            const receiptContent = document.getElementById('receiptContent');
+            
+            // Build items list
+            const itemsHtml = reservation.items.map(item => {
+                const returnedQty = item.returned_quantity || 0;
+                const unreturnedQty = item.quantity - returnedQty;
+                const isFullyReturned = returnedQty >= item.quantity;
+                const isPartiallyReturned = returnedQty > 0 && returnedQty < item.quantity;
+                
+                let returnStatusHtml = '';
+                if (isFullyReturned) {
+                    returnStatusHtml = `<div class="item-return-status" style="color: #31CB00;">✓ Fully returned (${returnedQty}/${item.quantity})</div>`;
+                } else if (isPartiallyReturned) {
+                    returnStatusHtml = `<div class="item-return-status" style="color: #ff9800;">
+                        ⚠ Partially returned: ${returnedQty} returned, <strong>${unreturnedQty} unreturned</strong>
+                    </div>`;
+                } else {
+                    returnStatusHtml = `<div class="item-return-status" style="color: #d32f2f;">
+                        ✗ Not returned (${item.quantity} unreturned)
+                    </div>`;
+                }
+
+                const itemClass = isFullyReturned ? '' : 'unreturned';
+                
+                return `
+                    <div class="receipt-item ${itemClass}">
+                        <div style="font-weight: 600; color: #152614;">
+                            ${item.name} (${item.type})
+                            ${!isFullyReturned ? '<span class="unreturned-badge">Unreturned</span>' : ''}
+                        </div>
+                        <div style="color: #666; margin-top: 5px;">
+                            Quantity Borrowed: ${item.quantity}
+                        </div>
+                        ${returnStatusHtml}
+                    </div>
+                `;
+            }).join('');
+
+            // Check if there are any unreturned items
+            const hasUnreturnedItems = reservation.items.some(item => {
+                const returnedQty = item.returned_quantity || 0;
+                return returnedQty < item.quantity;
+            });
+
+            const unreturnedNotice = hasUnreturnedItems ? `
+                <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ff9800;">
+                    <div style="font-weight: 600; color: #856404; margin-bottom: 10px;">
+                        ⚠ Unreturned Items Notice
+                    </div>
+                    <div style="color: #856404; font-size: 0.9rem;">
+                        This reservation has items that were not fully returned. The unreturned items are highlighted above.
+                    </div>
+                </div>
+            ` : '';
+
+            receiptContent.innerHTML = `
+                <div class="summary-item">
+                    <div class="summary-label">${reservation.user_role === 'Student' ? 'Student' : 'User'} Information:</div>
+                    <div class="summary-value">${reservation.user_name}</div>
+                </div>
+                ${reservation.year ? `
+                <div class="summary-item">
+                    <div class="summary-label">Program & Year:</div>
+                    <div class="summary-value">${reservation.year}${reservation.section ? ' - ' + reservation.section : ''}</div>
+                </div>
+                ` : ''}
+                ${reservation.professor_name ? `
+                <div class="summary-item">
+                    <div class="summary-label">Professor:</div>
+                    <div class="summary-value">${reservation.professor_name}</div>
+                </div>
+                ` : ''}
+                <div class="summary-item">
+                    <div class="summary-label">Reservation Date:</div>
+                    <div class="summary-value">${reservation.date}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Reservation Time:</div>
+                    <div class="summary-value">${reservation.start_time} - ${reservation.end_time}</div>
+                </div>
+                ${reservation.additional_note ? `
+                <div class="summary-item">
+                    <div class="summary-label">Additional Note:</div>
+                    <div class="summary-value">${reservation.additional_note}</div>
+                </div>
+                ` : ''}
+                <div class="summary-item">
+                    <div class="summary-label">Status:</div>
+                    <div class="summary-value">
+                        <span class="status-badge ${reservation.status === 'Partially Returned' ? 'status-partial' : reservation.status === 'Completed' ? 'status-completed' : 'status-returned'}">
+                            ${reservation.status}
+                        </span>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+                    <h4 style="color: #152614; margin-bottom: 15px;">Borrowed Items</h4>
+                    ${itemsHtml}
+                    ${unreturnedNotice}
+                </div>
+            `;
+            
+            document.getElementById('receiptModal').style.display = 'block';
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

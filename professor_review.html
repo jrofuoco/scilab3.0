@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initial Review - Professor</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Initial Review for Approval</h1>
+            <div class="user-info">
+                <span id="userName">Professor Name</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <div class="dashboard-content">
+            <a href="professor_dashboard.html" class="back-btn">← Back to Dashboard</a>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Resources</th>
+                            <th>Year & Section</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsTable">
+                        <!-- Data will be loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon"></div>
+                <div class="empty-state-text">No pending student requests</div>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Professor') {
+                document.getElementById('userName').textContent = user.firstname + ' ' + user.lastname;
+                loadPendingRequests();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function loadPendingRequests() {
+            // This will be connected to PHP backend
+            const requests = [
+                {
+                    id: 1,
+                    studentName: 'Jane Doe',
+                    date: '2024-02-01',
+                    startTime: '10:00',
+                    endTime: '12:00',
+                    resources: 'Hydrochloric Acid (1x), Flask 500ml (2x)',
+                    year: '2nd Year',
+                    section: 'A'
+                }
+            ];
+
+            const tbody = document.getElementById('reservationsTable');
+            if (requests.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                tbody.innerHTML = '';
+            } else {
+                document.getElementById('emptyState').style.display = 'none';
+                tbody.innerHTML = requests.map(req => `
+                    <tr>
+                        <td>${req.studentName}</td>
+                        <td>${req.date}</td>
+                        <td>${req.startTime} - ${req.endTime}</td>
+                        <td>${req.resources}</td>
+                        <td>${req.year} - ${req.section}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-approve" onclick="approveRequest(${req.id})">Approve</button>
+                                <button class="btn btn-decline" onclick="declineRequest(${req.id})">Decline</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function approveRequest(id) {
+            if (confirm('Are you sure you want to approve this request?')) {
+                // This will be connected to PHP backend
+                alert('Request approved! Sent to admin for final approval.');
+                loadPendingRequests();
+            }
+        }
+
+        function declineRequest(id) {
+            if (confirm('Are you sure you want to decline this request?')) {
+                // This will be connected to PHP backend
+                alert('Request declined.');
+                loadPendingRequests();
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unreturned Items - Admin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            color: #152614;
+            border-bottom-color: #31CB00;
+            font-weight: 600;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .student-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+        }
+        .student-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .student-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #152614;
+            margin-bottom: 5px;
+        }
+        .student-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .unreturned-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+        }
+        .item-info {
+            flex: 1;
+        }
+        .item-name {
+            font-weight: 600;
+            color: #152614;
+            margin-bottom: 5px;
+        }
+        .item-details {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .unreturned-qty {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+        .btn-return-unreturned {
+            padding: 8px 15px;
+            background-color: #31CB00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        .btn-return-unreturned:hover {
+            background-color: #2A7221;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">B</div>
+                <div class="sidebar-brand">
+                    <h1>SciLabReserve</h1>
+                    <p>Lab Management</p>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userAvatar">SA</div>
+                    <div class="user-info-sidebar">
+                        <p class="user-name" id="userNameSidebar">System Admin</p>
+                        <span class="user-role-badge admin">Admin</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-navigation">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="admin_dashboard.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_history.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Reservation History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_pending_professor.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Professor Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_pending_student.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Student Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_ongoing.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Ongoing Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_inventory.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Inventory</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_manage_professors.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Manage Professors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_unreturned.html" class="nav-link active">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Unreturned Items</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-link" onclick="logout(); return false;">
+                    <span class="logout-icon"></span>
+                    <span class="nav-text">Log out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <h1>Unreturned Items</h1>
+                <div class="user-info">
+                    <span id="userName">Admin Name</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <a href="admin_dashboard.html" class="back-btn">← Back to Dashboard</a>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('items')">All Unreturned Items</button>
+                <button class="tab-btn" onclick="switchTab('students')">Students with Unreturned Items</button>
+            </div>
+            
+            <div id="itemsTab" class="tab-content active">
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Item Name</th>
+                                <th>Type</th>
+                                <th>Borrowed</th>
+                                <th>Returned</th>
+                                <th>Unreturned</th>
+                                <th>Reservation Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTable">
+                            <!-- Data will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="itemsEmptyState" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon"></div>
+                    <div class="empty-state-text">No unreturned items</div>
+                </div>
+            </div>
+            
+            <div id="studentsTab" class="tab-content">
+                <div id="studentsList">
+                    <!-- Students with unreturned items will be displayed here -->
+                </div>
+                <div id="studentsEmptyState" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon"></div>
+                    <div class="empty-state-text">No students with unreturned items</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Admin') {
+                const firstName = user.firstname || 'System';
+                const lastName = user.lastname || 'Admin';
+                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+                const fullName = firstName + ' ' + lastName;
+                document.getElementById('userName').textContent = fullName;
+                if (document.getElementById('userNameSidebar')) {
+                    document.getElementById('userNameSidebar').textContent = fullName;
+                }
+                if (document.getElementById('userAvatar')) {
+                    document.getElementById('userAvatar').textContent = initials;
+                }
+                loadUnreturnedItems();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function loadUnreturnedItems() {
+            // Sample data for visualization
+            const sampleData = {
+                items: [
+                    {
+                        id: 1,
+                        reservation_id: 3,
+                        resource_id: 2,
+                        resource_name: 'Test Tube',
+                        resource_type: 'Glassware',
+                        borrowed_quantity: 10,
+                        returned_quantity: 7,
+                        unreturned_quantity: 3,
+                        reservation_date: '2024-02-17',
+                        reservation_time: '08:00 - 10:00',
+                        student_name: 'James Wilson',
+                        student_id: 3
+                    },
+                    {
+                        id: 2,
+                        reservation_id: 3,
+                        resource_id: 1,
+                        resource_name: 'Beaker 250ml',
+                        resource_type: 'Glassware',
+                        borrowed_quantity: 5,
+                        returned_quantity: 3,
+                        unreturned_quantity: 2,
+                        reservation_date: '2024-02-17',
+                        reservation_time: '08:00 - 10:00',
+                        student_name: 'James Wilson',
+                        student_id: 3
+                    },
+                    {
+                        id: 3,
+                        reservation_id: 4,
+                        resource_id: 2,
+                        resource_name: 'Test Tube',
+                        resource_type: 'Glassware',
+                        borrowed_quantity: 15,
+                        returned_quantity: 12,
+                        unreturned_quantity: 3,
+                        reservation_date: '2024-02-18',
+                        reservation_time: '13:00 - 15:00',
+                        student_name: 'Michael Brown',
+                        student_id: 4
+                    },
+                    {
+                        id: 4,
+                        reservation_id: 7,
+                        resource_id: 2,
+                        resource_name: 'Centrifuge',
+                        resource_type: 'Equipment',
+                        borrowed_quantity: 1,
+                        returned_quantity: 0,
+                        unreturned_quantity: 1,
+                        reservation_date: '2024-02-21',
+                        reservation_time: '14:00 - 16:00',
+                        student_name: 'Lisa Anderson',
+                        student_id: 7
+                    },
+                    {
+                        id: 5,
+                        reservation_id: 7,
+                        resource_id: 1,
+                        resource_name: 'Beaker 250ml',
+                        resource_type: 'Glassware',
+                        borrowed_quantity: 6,
+                        returned_quantity: 4,
+                        unreturned_quantity: 2,
+                        reservation_date: '2024-02-21',
+                        reservation_time: '14:00 - 16:00',
+                        student_name: 'Lisa Anderson',
+                        student_id: 7
+                    }
+                ],
+                students_with_unreturned: [
+                    {
+                        student_id: 3,
+                        student_name: 'James Wilson',
+                        student_email: 'james.wilson@university.edu',
+                        year: '3rd Year',
+                        section: 'B',
+                        professor_name: 'Dr. Emily Chen',
+                        professor_email: 'emily.chen@university.edu',
+                        items: [
+                            {
+                                id: 1,
+                                reservation_id: 3,
+                                resource_id: 2,
+                                resource_name: 'Test Tube',
+                                resource_type: 'Glassware',
+                                borrowed_quantity: 10,
+                                returned_quantity: 7,
+                                unreturned_quantity: 3,
+                                reservation_date: '2024-02-17',
+                                reservation_time: '08:00 - 10:00'
+                            },
+                            {
+                                id: 2,
+                                reservation_id: 3,
+                                resource_id: 1,
+                                resource_name: 'Beaker 250ml',
+                                resource_type: 'Glassware',
+                                borrowed_quantity: 5,
+                                returned_quantity: 3,
+                                unreturned_quantity: 2,
+                                reservation_date: '2024-02-17',
+                                reservation_time: '08:00 - 10:00'
+                            }
+                        ]
+                    },
+                    {
+                        student_id: 4,
+                        student_name: 'Michael Brown',
+                        student_email: 'michael.brown@university.edu',
+                        year: '2nd Year',
+                        section: 'A',
+                        professor_name: 'Dr. Sarah Martinez',
+                        professor_email: 'sarah.martinez@university.edu',
+                        items: [
+                            {
+                                id: 3,
+                                reservation_id: 4,
+                                resource_id: 2,
+                                resource_name: 'Test Tube',
+                                resource_type: 'Glassware',
+                                borrowed_quantity: 15,
+                                returned_quantity: 12,
+                                unreturned_quantity: 3,
+                                reservation_date: '2024-02-18',
+                                reservation_time: '13:00 - 15:00'
+                            }
+                        ]
+                    },
+                    {
+                        student_id: 7,
+                        student_name: 'Lisa Anderson',
+                        student_email: 'lisa.anderson@university.edu',
+                        year: '4th Year',
+                        section: 'D',
+                        professor_name: 'Dr. Michael Johnson',
+                        professor_email: 'michael.johnson@university.edu',
+                        items: [
+                            {
+                                id: 4,
+                                reservation_id: 7,
+                                resource_id: 2,
+                                resource_name: 'Centrifuge',
+                                resource_type: 'Equipment',
+                                borrowed_quantity: 1,
+                                returned_quantity: 0,
+                                unreturned_quantity: 1,
+                                reservation_date: '2024-02-21',
+                                reservation_time: '14:00 - 16:00'
+                            },
+                            {
+                                id: 5,
+                                reservation_id: 7,
+                                resource_id: 1,
+                                resource_name: 'Beaker 250ml',
+                                resource_type: 'Glassware',
+                                borrowed_quantity: 6,
+                                returned_quantity: 4,
+                                unreturned_quantity: 2,
+                                reservation_date: '2024-02-21',
+                                reservation_time: '14:00 - 16:00'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            displayItems(sampleData.items);
+            displayStudents(sampleData.students_with_unreturned);
+
+            // Uncomment below to use actual API
+            /*
+            fetch('php/get_unreturned_items.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayItems(data.items);
+                        displayStudents(data.students_with_unreturned);
+                    } else {
+                        console.error('Error loading unreturned items:', data.message);
+                        displayItems([]);
+                        displayStudents([]);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayItems([]);
+                    displayStudents([]);
+                });
+            */
+        }
+
+        function displayItems(items) {
+            const tbody = document.getElementById('itemsTable');
+            if (items.length === 0) {
+                document.getElementById('itemsEmptyState').style.display = 'block';
+                tbody.innerHTML = '';
+            } else {
+                document.getElementById('itemsEmptyState').style.display = 'none';
+                tbody.innerHTML = items.map(item => `
+                    <tr>
+                        <td>${getStudentName(item)}</td>
+                        <td>${item.resource_name}</td>
+                        <td>${item.resource_type}</td>
+                        <td>${item.borrowed_quantity}</td>
+                        <td>${item.returned_quantity}</td>
+                        <td class="unreturned-qty">${item.unreturned_quantity}</td>
+                        <td>${item.reservation_date}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="returnUnreturnedItem(${item.id}, ${item.resource_id}, ${item.unreturned_quantity}, ${item.reservation_id})">
+                                Returned
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function displayStudents(students) {
+            const container = document.getElementById('studentsList');
+            if (students.length === 0) {
+                document.getElementById('studentsEmptyState').style.display = 'block';
+                container.innerHTML = '';
+            } else {
+                document.getElementById('studentsEmptyState').style.display = 'none';
+                container.innerHTML = students.map(student => {
+                    const itemsHtml = student.items.map(item => `
+                        <div class="unreturned-item">
+                            <div class="item-info">
+                                <div class="item-name">${item.resource_name} (${item.resource_type})</div>
+                                <div class="item-details">
+                                    Borrowed: ${item.borrowed_quantity} | Returned: ${item.returned_quantity} | 
+                                    <span class="unreturned-qty">Unreturned: ${item.unreturned_quantity}</span> | 
+                                    Reservation: ${item.reservation_date} ${item.reservation_time}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-return-unreturned" 
+                                        onclick="returnUnreturnedItem(${item.id}, ${item.resource_id}, ${item.unreturned_quantity}, ${item.reservation_id})">
+                                    Returned
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    return `
+                        <div class="student-section">
+                            <div class="student-header">
+                                <div class="student-name">${student.student_name}</div>
+                                <div class="student-info">
+                                    ${student.year ? student.year + (student.section ? ' - ' + student.section : '') : 'N/A'} | 
+                                    ${student.professor_name ? 'Professor: ' + student.professor_name : 'No Professor'}
+                                </div>
+                            </div>
+                            ${itemsHtml}
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function getStudentName(item) {
+            return item.student_name || 'Student';
+        }
+
+        function returnUnreturnedItem(itemId, resourceId, unreturnedQty, reservationId) {
+            if (!confirm(`Mark ${unreturnedQty} item(s) as returned? This will add them back to inventory.`)) {
+                return;
+            }
+
+            fetch('php/process_item_return.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    reservation_id: reservationId,
+                    item_id: itemId,
+                    resource_id: resourceId,
+                    return_quantity: unreturnedQty
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Item return processed successfully!');
+                    loadUnreturnedItems();
+                } else {
+                    alert('Error processing return: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error processing return');
+            });
+        }
+    </script>
+</body>
+</html>
+

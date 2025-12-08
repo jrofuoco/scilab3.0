@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Professors - Admin</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">B</div>
+                <div class="sidebar-brand">
+                    <h1>SciLabReserve</h1>
+                    <p>Lab Management</p>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userAvatar">SA</div>
+                    <div class="user-info-sidebar">
+                        <p class="user-name" id="userNameSidebar">System Admin</p>
+                        <span class="user-role-badge admin">Admin</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-navigation">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="admin_dashboard.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_history.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Reservation History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_pending_professor.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Professor Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_pending_student.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Student Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_ongoing.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Ongoing Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_inventory.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Inventory</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_manage_professors.html" class="nav-link active">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Manage Professors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin_unreturned.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Unreturned Items</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-link" onclick="logout(); return false;">
+                    <span class="logout-icon"></span>
+                    <span class="nav-text">Log out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <h1>Manage Professors</h1>
+                <div class="user-info">
+                    <span id="userName">Admin Name</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <a href="admin_dashboard.html" class="back-btn">← Back to Dashboard</a>
+            <div class="manage-professors">
+                <h3 class="section-title">Create New Professor Account</h3>
+                <form id="professorForm" class="reservation-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">Username *</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname">First Name *</label>
+                            <input type="text" id="firstname" name="firstname" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Last Name *</label>
+                            <input type="text" id="lastname" name="lastname" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password *</label>
+                            <input type="password" id="password" name="password" required>
+                            <button type="button" class="show-password-btn" onclick="togglePassword('password')" style="position: absolute; right: 10px; top: 35px;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5C17 19.5 21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" fill="#152614"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password *</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
+                            <button type="button" class="show-password-btn" onclick="togglePassword('confirmPassword')" style="position: absolute; right: 10px; top: 35px;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5C17 19.5 21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" fill="#152614"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Create Professor Account</button>
+                </form>
+
+                <h3 class="section-title" style="margin-top: 40px;">Existing Professors</h3>
+                <div class="professor-list" id="professorList">
+                    <!-- Professors will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Admin') {
+                const firstName = user.firstname || 'System';
+                const lastName = user.lastname || 'Admin';
+                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+                const fullName = firstName + ' ' + lastName;
+                document.getElementById('userName').textContent = fullName;
+                if (document.getElementById('userNameSidebar')) {
+                    document.getElementById('userNameSidebar').textContent = fullName;
+                }
+                if (document.getElementById('userAvatar')) {
+                    document.getElementById('userAvatar').textContent = initials;
+                }
+                loadProfessors();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        document.getElementById('professorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            const formData = {
+                username: document.getElementById('username').value,
+                firstname: document.getElementById('firstname').value,
+                lastname: document.getElementById('lastname').value,
+                email: document.getElementById('email').value,
+                password: password
+            };
+
+            // This will be connected to PHP backend
+            alert('Professor account created successfully!');
+            document.getElementById('professorForm').reset();
+            loadProfessors();
+        });
+
+        function loadProfessors() {
+            // This will be connected to PHP backend
+            const professors = [
+                { id: 1, name: 'Dr. John Smith', email: 'john.smith@university.edu' },
+                { id: 2, name: 'Dr. Jane Doe', email: 'jane.doe@university.edu' },
+                { id: 3, name: 'Dr. Robert Johnson', email: 'robert.johnson@university.edu' }
+            ];
+
+            const list = document.getElementById('professorList');
+            list.innerHTML = professors.map(prof => `
+                <div class="professor-item">
+                    <div class="professor-info">
+                        <div class="professor-name">${prof.name}</div>
+                        <div class="professor-email">${prof.email}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
+

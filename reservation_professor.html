@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Reservation - Professor</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Create New Reservation</h1>
+            <div class="user-info">
+                <span id="userName">Professor Name</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <div class="dashboard-content">
+            <a href="professor_dashboard.html" class="back-btn">← Back to Dashboard</a>
+            <div class="reservation-container">
+                <div class="form-section">
+                    <h3 class="section-title">Available Resources</h3>
+                    <div class="inventory-tabs">
+                        <button class="tab-btn active" onclick="switchTab('rooms')">Laboratory Rooms</button>
+                        <button class="tab-btn" onclick="switchTab('chemicals')">Chemicals</button>
+                        <button class="tab-btn" onclick="switchTab('equipment')">Equipment</button>
+                        <button class="tab-btn" onclick="switchTab('glassware')">Glassware</button>
+                    </div>
+                    
+                    <div id="rooms" class="tab-content active">
+                        <div class="resource-grid" id="roomsGrid">
+                            <!-- Resources will be loaded dynamically -->
+                        </div>
+                    </div>
+                    <div id="chemicals" class="tab-content">
+                        <div class="resource-grid" id="chemicalsGrid">
+                            <!-- Resources will be loaded dynamically -->
+                        </div>
+                    </div>
+                    <div id="equipment" class="tab-content">
+                        <div class="resource-grid" id="equipmentGrid">
+                            <!-- Resources will be loaded dynamically -->
+                        </div>
+                    </div>
+                    <div id="glassware" class="tab-content">
+                        <div class="resource-grid" id="glasswareGrid">
+                            <!-- Resources will be loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cart-section">
+                    <h3 class="section-title">Reservation Cart</h3>
+                    <div id="cartItems">
+                        <div class="empty-state">
+                            <div class="empty-state-text">Your cart is empty. Add resources to get started.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Reservation Details</h3>
+                    <form id="reservationForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date">Date *</label>
+                                <input type="date" id="date" name="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="startTime">Start Time *</label>
+                                <input type="time" id="startTime" name="startTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endTime">End Time *</label>
+                                <input type="time" id="endTime" name="endTime" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="additionalNote">Additional Note (Optional)</label>
+                            <textarea id="additionalNote" name="additionalNote" rows="4" placeholder="Any additional information..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Submit Reservation</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Modal -->
+    <div id="summaryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Reservation Summary</h3>
+                <button class="close-modal" onclick="closeModal('summaryModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="summaryContent">
+                <!-- Summary will be populated here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('summaryModal')">Cancel</button>
+                <button class="btn-confirm" onclick="confirmReservation()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/reservation.js"></script>
+    <script>
+        let cart = [];
+        
+        window.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Professor') {
+                document.getElementById('userName').textContent = user.firstname + ' ' + user.lastname;
+                loadResources();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function loadResources() {
+            const sampleResources = {
+                rooms: [
+                    { id: 1, name: 'Chemistry Laboratory', quantity: 1, description: 'Room 211' },
+                    { id: 2, name: 'Physics Laboratory', quantity: 1, description: 'Room 212' },
+                    { id: 3, name: 'Biology Laboratory', quantity: 1, description: 'Room 213' },
+                    { id: 4, name: 'Lecture Room', quantity: 1, description: 'Room 214' },
+                ],
+                chemicals: [
+                    { id: 5, name: 'Sodium Chloride', quantity: 50, description: 'NaCl - Common salt' },
+                    { id: 6, name: 'Hydrochloric Acid', quantity: 30, description: 'HCl - Strong acid' },
+                    { id: 7, name: 'Sodium Hydroxide', quantity: 25, description: 'NaOH - Base compound' }
+                ],
+                equipment: [
+                    { id: 8, name: 'Microscope', quantity: 10, description: 'Laboratory microscope' },
+                    { id: 9, name: 'Centrifuge', quantity: 5, description: 'Laboratory centrifuge' },
+                    { id: 10, name: 'Hot Plate', quantity: 8, description: 'Electric hot plate' }
+                ],
+                glassware: [
+                    { id: 11, name: 'Beaker 250ml', quantity: 20, description: '250ml glass beaker' },
+                    { id: 12, name: 'Test Tube', quantity: 100, description: 'Standard test tube' },
+                    { id: 13, name: 'Flask 500ml', quantity: 15, description: '500ml Erlenmeyer flask' }
+                ]
+            };
+
+            renderResources('rooms', sampleResources.rooms);
+            renderResources('chemicals', sampleResources.chemicals);
+            renderResources('equipment', sampleResources.equipment);
+            renderResources('glassware', sampleResources.glassware);
+        }
+
+        function renderResources(type, resources) {
+            const grid = document.getElementById(type + 'Grid');
+            const typeName = type === 'rooms' ? 'Laboratory Room' : type;
+            grid.innerHTML = resources.map(resource => `
+                <div class="resource-card">
+                    <div class="resource-name">${resource.name}</div>
+                    <div class="resource-info">${resource.description}</div>
+                    <div class="resource-quantity">Available: ${resource.quantity}</div>
+                    <button class="add-to-cart-btn" onclick="addToCart(${resource.id}, '${resource.name}', '${typeName}', ${resource.quantity})" 
+                            ${resource.quantity === 0 ? 'disabled' : ''}>
+                        Select
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id, name, type, available) {
+            const existingItem = cart.find(item => item.id === id);
+            if (existingItem) {
+                if (existingItem.quantity < available) {
+                    existingItem.quantity++;
+                } else {
+                    alert('Maximum available quantity reached');
+                    return;
+                }
+            } else {
+                cart.push({ id, name, type, quantity: 1, available });
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-state"><div class="empty-state-text">Your cart is empty. Add resources to get started.</div></div>';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-type">${item.type}</div>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="decreaseQuantity(${index})">-</button>
+                        <span class="quantity-display">${item.quantity}</span>
+                        <button class="quantity-btn" onclick="increaseQuantity(${index})">+</button>
+                    </div>
+                    <button class="remove-item-btn" onclick="removeFromCart(${index})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function increaseQuantity(index) {
+            if (cart[index].quantity < cart[index].available) {
+                cart[index].quantity++;
+                updateCart();
+            } else {
+                alert('Maximum available quantity reached');
+            }
+        }
+
+        function decreaseQuantity(index) {
+            if (cart[index].quantity > 1) {
+                cart[index].quantity--;
+                updateCart();
+            } else {
+                removeFromCart(index);
+            }
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (cart.length === 0) {
+                alert('Please add at least one resource to your cart');
+                return;
+            }
+
+            const formData = {
+                date: document.getElementById('date').value,
+                startTime: document.getElementById('startTime').value,
+                endTime: document.getElementById('endTime').value,
+                additionalNote: document.getElementById('additionalNote').value
+            };
+
+            showSummary(formData);
+        });
+
+        function showSummary(formData) {
+            const summaryContent = document.getElementById('summaryContent');
+            summaryContent.innerHTML = `
+                <div class="summary-item">
+                    <div class="summary-label">Date:</div>
+                    <div class="summary-value">${formData.date}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Time:</div>
+                    <div class="summary-value">${formData.startTime} - ${formData.endTime}</div>
+                </div>
+                ${formData.additionalNote ? `
+                <div class="summary-item">
+                    <div class="summary-label">Additional Note:</div>
+                    <div class="summary-value">${formData.additionalNote}</div>
+                </div>
+                ` : ''}
+                <div class="summary-item">
+                    <div class="summary-label">Resources:</div>
+                    <div class="summary-value">
+                        ${cart.map(item => `${item.name} (${item.quantity}x)`).join('<br>')}
+                    </div>
+                </div>
+            `;
+            document.getElementById('summaryModal').style.display = 'block';
+        }
+
+        function confirmReservation() {
+            const formData = {
+                date: document.getElementById('date').value,
+                startTime: document.getElementById('startTime').value,
+                endTime: document.getElementById('endTime').value,
+                additionalNote: document.getElementById('additionalNote').value,
+                resources: cart
+            };
+
+            alert('Reservation submitted successfully! Waiting for admin approval.');
+            window.location.href = 'professor_dashboard.html';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+
