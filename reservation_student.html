@@ -344,6 +344,7 @@
 
             const formData = {
                 userId: user.id,
+                userRole: user.role,
                 date: document.getElementById('date').value,
                 startTime: document.getElementById('startTime').value,
                 endTime: document.getElementById('endTime').value,
@@ -353,6 +354,7 @@
                 resources: cart
             };
 
+            console.log('Submitting reservation with data:', formData);
             try {
                 const response = await fetch('php/submit_reservation.php', {
                     method: 'POST',

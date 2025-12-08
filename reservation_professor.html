@@ -425,6 +425,7 @@
             const professorName = user.firstname + ' ' + user.lastname;
             const formData = {
                 userId: user.user_id || user.id,
+                userRole: user.role,
                 professor: professorName,
                 date: document.getElementById('date').value,
                 startTime: document.getElementById('startTime').value,

@@ -22,11 +22,21 @@ try {
     }
     
     // Validate required fields
-    if (empty($data['userId']) || empty($data['date']) || empty($data['startTime']) || 
-        empty($data['endTime']) || empty($data['resources'])) {
-        echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+    $missingFields = [];
+    if (empty($data['userId'])) $missingFields[] = 'userId';
+    if (empty($data['date'])) $missingFields[] = 'date';
+    if (empty($data['startTime'])) $missingFields[] = 'startTime';
+    if (empty($data['endTime'])) $missingFields[] = 'endTime';
+    if (empty($data['resources'])) $missingFields[] = 'resources';
+    if (empty($data['userRole'])) $missingFields[] = 'userRole';
+    
+    if (!empty($missingFields)) {
+        echo json_encode(['success' => false, 'message' => 'Missing required fields: ' . implode(', ', $missingFields)]);
         exit;
     }
+    
+    // Determine professor approval based on user role
+    $professorApproval = ($data['userRole'] === 'Professor') ? 'Approved' : 'Pending';
     
     // Start a transaction
     $pdo->beginTransaction();
@@ -34,7 +44,7 @@ try {
     // 1. Create the main reservation
     $reservationQuery = "
         INSERT INTO reservations (user_id, room_id, reservation_date, start_time, end_time, year, section, professor, professor_approval, admin_approval)
-        VALUES (:user_id, :room_id, :reservation_date, :start_time, :end_time, :year, :section, :professor, 'Approved', 'Pending')
+        VALUES (:user_id, :room_id, :reservation_date, :start_time, :end_time, :year, :section, :professor, :professor_approval, 'Pending')
     ";
     
     $resStmt = $pdo->prepare($reservationQuery);
@@ -46,7 +56,8 @@ try {
         ':end_time' => $data['endTime'],
         ':year' => !empty($data['year']) ? $data['year'] : null,
         ':section' => !empty($data['section']) ? $data['section'] : null,
-        ':professor' => !empty($data['professor']) ? $data['professor'] : null
+        ':professor' => !empty($data['professor']) ? $data['professor'] : null,
+        ':professor_approval' => $professorApproval
     ]);
     
     $reservationId = $pdo->lastInsertId();
