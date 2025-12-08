@@ -27,10 +27,10 @@ try {
     // Start transaction to handle resource restoration
     $pdo->beginTransaction();
     
-    // Update the reservation to mark professor approval as 'Rejected'
+    // Update the reservation to mark professor approval as 'Declined'
     $query = "
         UPDATE reservations 
-        SET professor_approval = 'Rejected', admin_approval = 'Rejected'
+        SET professor_approval = 'Declined'
         WHERE reservation_id = :reservation_id
     ";
     

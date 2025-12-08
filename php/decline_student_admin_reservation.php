@@ -27,7 +27,7 @@ try {
     // Start transaction to handle resource restoration
     $pdo->beginTransaction();
     
-    // Update the reservation to mark admin approval as 'Rejected'
+    // Update the reservation to mark admin approval as 'Declined'
     $query = "
         UPDATE reservations 
         SET admin_approval = 'Declined'
