@@ -100,10 +100,10 @@
                 <a href="admin_dashboard.html" class="back-btn">← Back to Dashboard</a>
             <div class="inventory-section">
                 <div class="inventory-tabs">
-                    <button class="tab-btn active" onclick="switchTab('rooms')">Laboratory Rooms</button>
-                    <button class="tab-btn" onclick="switchTab('chemicals')">Chemicals</button>
-                    <button class="tab-btn" onclick="switchTab('equipment')">Equipment</button>
-                    <button class="tab-btn" onclick="switchTab('glassware')">Glassware</button>
+                    <button class="tab-btn active" onclick="switchTab('rooms', this)">Laboratory Rooms</button>
+                    <button class="tab-btn" onclick="switchTab('chemicals', this)">Chemicals</button>
+                    <button class="tab-btn" onclick="switchTab('equipment', this)">Equipment</button>
+                    <button class="tab-btn" onclick="switchTab('glassware', this)">Glassware</button>
                 </div>
 
                 <div id="rooms" class="tab-content active">
@@ -130,144 +130,8 @@
         </main>
     </div>
     <script src="js/main.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function() {
-            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-            if (user.username && user.role === 'Admin') {
-                const firstName = user.firstname || 'System';
-                const lastName = user.lastname || 'Admin';
-                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
-                const fullName = firstName + ' ' + lastName;
-                document.getElementById('userName').textContent = fullName;
-                if (document.getElementById('userNameSidebar')) {
-                    document.getElementById('userNameSidebar').textContent = fullName;
-                }
-                if (document.getElementById('userAvatar')) {
-                    document.getElementById('userAvatar').textContent = initials;
-                }
-                loadInventory();
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function loadInventory() {
-            // Sample data for visualization
-            const inventory = {
-                rooms: [
-                    { id: 1, name: 'Laboratory Room A', quantity: 1, description: 'Main laboratory room with 20 workstations', available: true },
-                    { id: 2, name: 'Laboratory Room B', quantity: 1, description: 'Secondary laboratory room with 15 workstations', available: true },
-                    { id: 3, name: 'Research Lab', quantity: 1, description: 'Advanced research laboratory', available: false },
-                    { id: 4, name: 'Chemistry Lab', quantity: 1, description: 'Specialized chemistry laboratory', available: true },
-                    { id: 5, name: 'Biology Lab', quantity: 1, description: 'Biology research laboratory', available: true }
-                ],
-                chemicals: [
-                    { id: 1, name: 'Sodium Chloride', quantity: 50, description: 'NaCl - Common salt' },
-                    { id: 2, name: 'Hydrochloric Acid', quantity: 30, description: 'HCl - Strong acid' },
-                    { id: 3, name: 'Sodium Hydroxide', quantity: 25, description: 'NaOH - Base compound' },
-                    { id: 4, name: 'Sulfuric Acid', quantity: 20, description: 'H2SO4 - Strong acid' },
-                    { id: 5, name: 'Nitric Acid', quantity: 15, description: 'HNO3 - Strong oxidizing acid' },
-                    { id: 6, name: 'Ethanol', quantity: 40, description: 'C2H5OH - Alcohol compound' },
-                    { id: 7, name: 'Acetone', quantity: 35, description: 'C3H6O - Organic solvent' },
-                    { id: 8, name: 'Potassium Permanganate', quantity: 18, description: 'KMnO4 - Oxidizing agent' }
-                ],
-                equipment: [
-                    { id: 1, name: 'Microscope', quantity: 10, description: 'Laboratory microscope' },
-                    { id: 2, name: 'Centrifuge', quantity: 5, description: 'Laboratory centrifuge' },
-                    { id: 3, name: 'Hot Plate', quantity: 8, description: 'Electric hot plate' },
-                    { id: 4, name: 'Digital Balance', quantity: 6, description: 'Precision digital weighing scale' },
-                    { id: 5, name: 'pH Meter', quantity: 4, description: 'Digital pH measurement device' },
-                    { id: 6, name: 'Spectrophotometer', quantity: 2, description: 'Light absorption measurement device' },
-                    { id: 7, name: 'Autoclave', quantity: 3, description: 'Sterilization equipment' },
-                    { id: 8, name: 'Water Bath', quantity: 5, description: 'Temperature-controlled water bath' }
-                ],
-                glassware: [
-                    { id: 1, name: 'Beaker 250ml', quantity: 20, description: '250ml glass beaker' },
-                    { id: 2, name: 'Test Tube', quantity: 100, description: 'Standard test tube' },
-                    { id: 3, name: 'Flask 500ml', quantity: 15, description: '500ml Erlenmeyer flask' },
-                    { id: 4, name: 'Beaker 500ml', quantity: 18, description: '500ml glass beaker' },
-                    { id: 5, name: 'Beaker 1000ml', quantity: 12, description: '1000ml glass beaker' },
-                    { id: 6, name: 'Flask 250ml', quantity: 20, description: '250ml Erlenmeyer flask' },
-                    { id: 7, name: 'Graduated Cylinder 100ml', quantity: 15, description: '100ml measuring cylinder' },
-                    { id: 8, name: 'Graduated Cylinder 250ml', quantity: 10, description: '250ml measuring cylinder' },
-                    { id: 9, name: 'Pipette 10ml', quantity: 25, description: '10ml glass pipette' },
-                    { id: 10, name: 'Pipette 25ml', quantity: 20, description: '25ml glass pipette' },
-                    { id: 11, name: 'Burette 50ml', quantity: 8, description: '50ml glass burette' },
-                    { id: 12, name: 'Petri Dish', quantity: 50, description: 'Standard petri dish' }
-                ]
-            };
-
-            renderInventory('rooms', inventory.rooms);
-            renderInventory('chemicals', inventory.chemicals);
-            renderInventory('equipment', inventory.equipment);
-            renderInventory('glassware', inventory.glassware);
-        }
-
-        function renderInventory(type, items) {
-            const list = document.getElementById(type + 'List');
-            list.innerHTML = items.map(item => {
-                const availability = type === 'rooms' ? 
-                    `<div style="color: ${item.available ? '#31CB00' : '#f44336'}; font-weight: 600;">
-                        ${item.available ? 'Available' : 'Unavailable'}
-                    </div>` : '';
-                
-                return `
-                    <div class="inventory-item">
-                        <div class="inventory-item-info">
-                            <div class="inventory-item-name">${item.name}</div>
-                            <div class="inventory-item-desc">${item.description}</div>
-                            ${availability}
-                            ${type !== 'rooms' ? `<div class="inventory-item-quantity">Quantity: ${item.quantity}</div>` : ''}
-                        </div>
-                        <div class="inventory-actions">
-                            ${type !== 'rooms' ? `
-                                <input type="number" class="quantity-input" id="qty_${type}_${item.id}" value="${item.quantity}" min="0">
-                                <button class="btn-update" onclick="updateQuantity('${type}', ${item.id})">Update</button>
-                            ` : `
-                                <button class="btn-update" onclick="toggleRoomAvailability(${item.id})">
-                                    ${item.available ? 'Mark Unavailable' : 'Mark Available'}
-                                </button>
-                            `}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function updateQuantity(type, id) {
-            const input = document.getElementById(`qty_${type}_${id}`);
-            const newQuantity = parseInt(input.value);
-            
-            if (isNaN(newQuantity) || newQuantity < 0) {
-                alert('Please enter a valid quantity');
-                return;
-            }
-
-            if (confirm(`Update quantity to ${newQuantity}?`)) {
-                // This will be connected to PHP backend
-                alert('Quantity updated successfully!');
-                loadInventory();
-            }
-        }
-
-        function toggleRoomAvailability(id) {
-            // This will be connected to PHP backend
-            alert('Room availability updated!');
-            loadInventory();
-        }
-    </script>
+    <script src="js/admin_inventory.js"></script>
 </body>
+
 </html>
 
