@@ -50,9 +50,8 @@ try {
     
     $reservationId = $pdo->lastInsertId();
     
-    // 2. Add each resource to appropriate table based on type
+    // 2. Add each resource to appropriate table and deduct stock
     foreach ($data['resources'] as $resource) {
-        // Check if it's a chemical (id from chemicals table) or asset (id from lab_assets)
         if ($resource['type'] === 'chemicals') {
             // Add to chemical_usage table
             $chemicalQuery = "
@@ -66,8 +65,26 @@ try {
                 ':chemical_id' => $resource['id'],
                 ':quantity' => $resource['quantity']
             ]);
+            
+            // Deduct from chemicals table
+            $deductChemicalQuery = "
+                UPDATE chemicals 
+                SET stock_quantity = stock_quantity - :deduct_amount
+                WHERE chemical_id = :chem_id AND stock_quantity >= :check_amount
+            ";
+            
+            $deductChemicalStmt = $pdo->prepare($deductChemicalQuery);
+            $deductChemicalStmt->execute([
+                ':chem_id' => $resource['id'],
+                ':deduct_amount' => $resource['quantity'],
+                ':check_amount' => $resource['quantity']
+            ]);
+            
+            if ($deductChemicalStmt->rowCount() === 0) {
+                throw new Exception("Insufficient stock for chemical ID {$resource['id']}");
+            }
         } else {
-            // Add to reservation_items table (for equipment and glassware)
+            // Add to reservation_items table
             $itemQuery = "
                 INSERT INTO reservation_items (reservation_id, asset_id, quantity_borrowed, is_returned)
                 VALUES (:reservation_id, :asset_id, :quantity, 0)
@@ -79,6 +96,24 @@ try {
                 ':asset_id' => $resource['id'],
                 ':quantity' => $resource['quantity']
             ]);
+            
+            // Deduct from lab_assets table
+            $deductAssetQuery = "
+                UPDATE lab_assets 
+                SET available_stock = available_stock - :deduct_qty
+                WHERE asset_id = :aid AND available_stock >= :check_qty
+            ";
+            
+            $deductAssetStmt = $pdo->prepare($deductAssetQuery);
+            $deductAssetStmt->execute([
+                ':aid' => $resource['id'],
+                ':deduct_qty' => $resource['quantity'],
+                ':check_qty' => $resource['quantity']
+            ]);
+            
+            if ($deductAssetStmt->rowCount() === 0) {
+                throw new Exception("Insufficient stock for asset ID {$resource['id']}");
+            }
         }
     }
     
