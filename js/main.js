@@ -23,9 +23,11 @@ function navigateTo(page) {
 // Set active navigation link based on current page
 function setActiveNavLink() {
     const currentPage = window.location.pathname.split('/').pop() || window.location.href.split('/').pop();
+    console.log('Current page detected:', currentPage); // Debug log
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         const href = link.getAttribute('href');
+        console.log('Checking link href:', href, 'against current page:', currentPage); // Debug log
         if (href === currentPage || (currentPage === '' && href === 'index.html')) {
             link.classList.add('active');
         } else {
