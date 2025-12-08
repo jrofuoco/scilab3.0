@@ -65,7 +65,7 @@
                     <li class="nav-item">
                         <a href="professor_approved.html" class="nav-link">
                             <span class="nav-icon">✓</span>
-                            <span class="nav-text">Approved Reservations</span>
+                            <span class="nav-text">Student Approved Reservations</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -94,7 +94,7 @@
                 </div>
             </div>
             <div class="dashboard-content">
-                <a href="professor_dashboard.html" class="back-btn">← Back to Dashboard</a>
+                <!-- <a href="professor_dashboard.html" class="back-btn">← Back to Dashboard</a> -->
                 <div class="data-table">
                     <table>
                         <thead>
@@ -119,59 +119,7 @@
             </div>
     </div>
     <script src="js/main.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-            if (user.username && user.role === 'Professor') {
-                const fullName = user.firstname + ' ' + user.lastname;
-                document.getElementById('userName').textContent = fullName;
-                document.getElementById('userNameSidebar').textContent = fullName;
-                document.getElementById('userAvatar').textContent = (user.firstname.charAt(0) + user.lastname.charAt(0)).toUpperCase();
-                loadReservations();
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        function loadReservations() {
-            // This will be connected to PHP backend
-            const reservations = [
-                {
-                    id: 1,
-                    date: '2024-01-10',
-                    startTime: '08:00',
-                    endTime: '10:00',
-                    resources: 'Laboratory Room A (1x), Microscope (5x)',
-                    note: 'For research experiment',
-                    status: 'Completed'
-                }
-            ];
-
-            const tbody = document.getElementById('reservationsTable');
-            if (reservations.length === 0) {
-                document.getElementById('emptyState').style.display = 'block';
-                tbody.innerHTML = '';
-            } else {
-                document.getElementById('emptyState').style.display = 'none';
-                tbody.innerHTML = reservations.map(res => `
-                    <tr>
-                        <td>${res.date}</td>
-                        <td>${res.startTime} - ${res.endTime}</td>
-                        <td>${res.resources}</td>
-                        <td>${res.note || 'N/A'}</td>
-                        <td><span style="color: #31CB00; font-weight: 600;">${res.status}</span></td>
-                        <td>
-                            <button class="btn btn-view" onclick="viewDetails(${res.id})">View</button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-        }
-
-        function viewDetails(id) {
-            alert('Viewing reservation details for ID: ' + id);
-        }
-    </script>
+    <script src="js/professor_history.js"></script>
     </main>
     </div>
 </body>
