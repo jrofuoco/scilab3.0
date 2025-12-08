@@ -1,90 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Reservation - Professor</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    
+
     <div class="dashboard-container">
-        <div class="dashboard-header">
-            <h1>Create New Reservation</h1>
-            <div class="user-info">
-                <span id="userName">Professor Name</span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
-            </div>
-        </div>
-        <div class="dashboard-content">
-            <a href="professor_dashboard.html" class="back-btn">← Back to Dashboard</a>
-            <div class="reservation-container">
-                <div class="form-section">
-                    <h3 class="section-title">Available Resources</h3>
-                    <div class="inventory-tabs">
-                        <button class="tab-btn active" onclick="switchTab('rooms')">Laboratory Rooms</button>
-                        <button class="tab-btn" onclick="switchTab('chemicals')">Chemicals</button>
-                        <button class="tab-btn" onclick="switchTab('equipment')">Equipment</button>
-                        <button class="tab-btn" onclick="switchTab('glassware')">Glassware</button>
-                    </div>
-                    
-                    <div id="rooms" class="tab-content active">
-                        <div class="resource-grid" id="roomsGrid">
-                            <!-- Resources will be loaded dynamically -->
-                        </div>
-                    </div>
-                    <div id="chemicals" class="tab-content">
-                        <div class="resource-grid" id="chemicalsGrid">
-                            <!-- Resources will be loaded dynamically -->
-                        </div>
-                    </div>
-                    <div id="equipment" class="tab-content">
-                        <div class="resource-grid" id="equipmentGrid">
-                            <!-- Resources will be loaded dynamically -->
-                        </div>
-                    </div>
-                    <div id="glassware" class="tab-content">
-                        <div class="resource-grid" id="glasswareGrid">
-                            <!-- Resources will be loaded dynamically -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="cart-section">
-                    <h3 class="section-title">Reservation Cart</h3>
-                    <div id="cartItems">
-                        <div class="empty-state">
-                            <div class="empty-state-text">Your cart is empty. Add resources to get started.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3 class="section-title">Reservation Details</h3>
-                    <form id="reservationForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="date">Date *</label>
-                                <input type="date" id="date" name="date" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="startTime">Start Time *</label>
-                                <input type="time" id="startTime" name="startTime" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="endTime">End Time *</label>
-                                <input type="time" id="endTime" name="endTime" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="additionalNote">Additional Note (Optional)</label>
-                            <textarea id="additionalNote" name="additionalNote" rows="4" placeholder="Any additional information..."></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn">Submit Reservation</button>
-                    </form>
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">B</div>
+                <div class="sidebar-brand">
+                    <h1>SciLabReserve</h1>
+                    <p>Lab Management</p>
                 </div>
             </div>
-        </div>
+            <div class="sidebar-user">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userAvatar">NC</div>
+                    <div class="user-info-sidebar">
+                        <p class="user-name" id="userNameSidebar">Professor Name</p>
+                        <span class="user-role-badge professor">Professor</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-navigation">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="professor_dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reservation_professor.html" class="nav-link active">
+                            <span class="nav-icon">➕</span>
+                            <span class="nav-text">New Reservation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_pending.html" class="nav-link active">
+                            <span class="nav-icon">⏳</span>
+                            <span class="nav-text">Pending Approval</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_history.html" class="nav-link">
+                            <span class="nav-icon">🕐</span>
+                            <span class="nav-text">Reservation History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_review.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span class="nav-text">Student Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_approved.html" class="nav-link">
+                            <span class="nav-icon">✓</span>
+                            <span class="nav-text">Approved Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_unreturned.html" class="nav-link">
+                            <span class="nav-icon">⚠️</span>
+                            <span class="nav-text">Students with Unreturned Items</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-link" onclick="logout(); return false;">
+                    <span class="logout-icon">→</span>
+                    <span class="nav-text">Log out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <h1>Create New Reservation</h1>
+                <div class="user-info">
+                    <span id="userName">Professor Name</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <a href="professor_dashboard.html" class="back-btn">← Back to Dashboard</a>
+                <div class="reservation-container">
+                    <div class="form-section">
+                        <h3 class="section-title">Available Resources</h3>
+                        <div class="inventory-tabs">
+                            <button class="tab-btn active" onclick="switchTab('rooms')">Laboratory Rooms</button>
+                            <button class="tab-btn" onclick="switchTab('chemicals')">Chemicals</button>
+                            <button class="tab-btn" onclick="switchTab('equipment')">Equipment</button>
+                            <button class="tab-btn" onclick="switchTab('glassware')">Glassware</button>
+                        </div>
+
+                        <div id="rooms" class="tab-content active">
+                            <div class="resource-grid" id="roomsGrid">
+                                <!-- Resources will be loaded dynamically -->
+                            </div>
+                        </div>
+                        <div id="chemicals" class="tab-content">
+                            <div class="resource-grid" id="chemicalsGrid">
+                                <!-- Resources will be loaded dynamically -->
+                            </div>
+                        </div>
+                        <div id="equipment" class="tab-content">
+                            <div class="resource-grid" id="equipmentGrid">
+                                <!-- Resources will be loaded dynamically -->
+                            </div>
+                        </div>
+                        <div id="glassware" class="tab-content">
+                            <div class="resource-grid" id="glasswareGrid">
+                                <!-- Resources will be loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cart-section">
+                        <h3 class="section-title">Reservation Cart</h3>
+                        <div id="cartItems">
+                            <div class="empty-state">
+                                <div class="empty-state-text">Your cart is empty. Add resources to get started.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Reservation Details</h3>
+                        <form id="reservationForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="date">Date *</label>
+                                    <input type="date" id="date" name="date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="startTime">Start Time *</label>
+                                    <input type="time" id="startTime" name="startTime" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endTime">End Time *</label>
+                                    <input type="time" id="endTime" name="endTime" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="additionalNote">Additional Note (Optional)</label>
+                                <textarea id="additionalNote" name="additionalNote" rows="4"
+                                    placeholder="Any additional information..."></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">Submit Reservation</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
     </div>
 
     <!-- Summary Modal -->
@@ -108,8 +186,21 @@
     <script src="js/reservation.js"></script>
     <script>
         let cart = [];
-        
-        window.addEventListener('DOMContentLoaded', function() {
+
+        window.addEventListener('DOMContentLoaded', function () {
+            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+            if (user.username && user.role === 'Professor') {
+                const fullName = user.firstname + ' ' + user.lastname;
+                document.getElementById('userName').textContent = fullName;
+                document.getElementById('userNameSidebar').textContent = fullName;
+                document.getElementById('userAvatar').textContent = (user.firstname.charAt(0) + user.lastname.charAt(0)).toUpperCase();
+                loadApprovedReservations();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', function () {
             const user = JSON.parse(sessionStorage.getItem('user') || '{}');
             if (user.username && user.role === 'Professor') {
                 document.getElementById('userName').textContent = user.firstname + ' ' + user.lastname;
@@ -126,7 +217,7 @@
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
+
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
@@ -239,7 +330,7 @@
             updateCart();
         }
 
-        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+        document.getElementById('reservationForm').addEventListener('submit', function (e) {
             e.preventDefault();
             if (cart.length === 0) {
                 alert('Please add at least one resource to your cart');
@@ -300,6 +391,8 @@
             document.getElementById(modalId).style.display = 'none';
         }
     </script>
+    </main>
+    </div>
 </body>
-</html>
 
+</html>

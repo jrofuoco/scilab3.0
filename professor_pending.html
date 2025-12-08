@@ -1,52 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pending Approvals - Professor</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    
+
     <div class="dashboard-container">
-        <div class="dashboard-header">
-            <h1>Pending Approvals</h1>
-            <div class="user-info">
-                <span id="userName">Professor Name</span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">B</div>
+                <div class="sidebar-brand">
+                    <h1>SciLabReserve</h1>
+                    <p>Lab Management</p>
+                </div>
             </div>
-        </div>
-        <div class="dashboard-content">
-            <a href="professor_dashboard.html" class="back-btn">← Back to Dashboard</a>
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Resources</th>
-                            <th>Additional Note</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="reservationsTable">
-                        <!-- Data will be loaded dynamically -->
-                    </tbody>
-                </table>
+            <div class="sidebar-user">
+                <div class="user-profile-card">
+                    <div class="user-avatar" id="userAvatar">NC</div>
+                    <div class="user-info-sidebar">
+                        <p class="user-name" id="userNameSidebar">Professor Name</p>
+                        <span class="user-role-badge professor">Professor</span>
+                    </div>
+                </div>
             </div>
-            <div id="emptyState" class="empty-state" style="display: none;">
-                <div class="empty-state-icon">⏳</div>
-                <div class="empty-state-text">No pending reservations</div>
+            <nav class="sidebar-navigation">
+                <div class="nav-section-title">Navigation</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="professor_dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reservation_professor.html" class="nav-link">
+                            <span class="nav-icon">➕</span>
+                            <span class="nav-text">New Reservation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_pending.html" class="nav-link active">
+                            <span class="nav-icon">⏳</span>
+                            <span class="nav-text">Pending Approval</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_history.html" class="nav-link">
+                            <span class="nav-icon">🕐</span>
+                            <span class="nav-text">Reservation History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_review.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span class="nav-text">Student Approvals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_approved.html" class="nav-link">
+                            <span class="nav-icon">✓</span>
+                            <span class="nav-text">Approved Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="professor_unreturned.html" class="nav-link">
+                            <span class="nav-icon">⚠️</span>
+                            <span class="nav-text">Students with Unreturned Items</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-link" onclick="logout(); return false;">
+                    <span class="logout-icon">→</span>
+                    <span class="nav-text">Log out</span>
+                </a>
             </div>
-        </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <h1>Pending Approvals</h1>
+                <div class="user-info">
+                    <span id="userName">Professor Name</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <a href="professor_dashboard.html" class="back-btn">← Back to Dashboard</a>
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Resources</th>
+                                <th>Additional Note</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservationsTable">
+                            <!-- Data will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">⏳</div>
+                    <div class="empty-state-text">No pending reservations</div>
+                </div>
+            </div>
+        </main>
     </div>
     <script src="js/main.js"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', function () {
             const user = JSON.parse(sessionStorage.getItem('user') || '{}');
             if (user.username && user.role === 'Professor') {
-                document.getElementById('userName').textContent = user.firstname + ' ' + user.lastname;
+                const fullName = user.firstname + ' ' + user.lastname;
+                document.getElementById('userName').textContent = fullName;
+                document.getElementById('userNameSidebar').textContent = fullName;
+                document.getElementById('userAvatar').textContent = (user.firstname.charAt(0) + user.lastname.charAt(0)).toUpperCase();
                 loadPendingReservations();
             } else {
                 window.location.href = 'index.html';
@@ -108,6 +189,8 @@
             alert('Viewing reservation details for ID: ' + id);
         }
     </script>
+    </main>
+    </div>
 </body>
-</html>
 
+</html>

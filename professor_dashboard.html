@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professor Dashboard - Scilab 3.0 - Science Laboratory Reservation System</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <div class="dashboard-container">
         <!-- Sidebar Navigation -->
@@ -30,38 +32,44 @@
                 <div class="nav-section-title">Navigation</div>
                 <ul class="nav-menu">
                     <li class="nav-item">
-                        <a href="professor_dashboard.html" class="nav-link active">
-                            <span class="nav-icon"></span>
+                        <a href="professor_dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
                             <span class="nav-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="reservation_professor.html" class="nav-link">
-                            <span class="nav-icon"></span>
+                        <a href="reservation_professor.html" class="nav-link active">
+                            <span class="nav-icon">➕</span>
                             <span class="nav-text">New Reservation</span>
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="reservation_professor.html" class="nav-link active">
+                            <span class="nav-icon">⏳</span>
+                            <span class="nav-text">Pending Approval</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="professor_history.html" class="nav-link">
-                            <span class="nav-icon"></span>
+                            <span class="nav-icon">🕐</span>
                             <span class="nav-text">Reservation History</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="professor_review.html" class="nav-link">
-                            <span class="nav-icon"></span>
+                            <span class="nav-icon">👥</span>
                             <span class="nav-text">Student Approvals</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="professor_approved.html" class="nav-link">
-                            <span class="nav-icon"></span>
+                            <span class="nav-icon">✓</span>
                             <span class="nav-text">Approved Reservations</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="professor_unreturned.html" class="nav-link">
-                            <span class="nav-icon"></span>
+                            <span class="nav-icon">⚠️</span>
                             <span class="nav-text">Students with Unreturned Items</span>
                         </a>
                     </li>
@@ -90,7 +98,8 @@
                     <div class="dashboard-card" onclick="navigateTo('reservation_professor.html')">
                         <div class="card-icon"></div>
                         <div class="card-title">Create New Reservation</div>
-                        <div class="card-description">Make a new reservation for laboratory rooms, chemicals, equipment, or glassware</div>
+                        <div class="card-description">Make a new reservation for laboratory rooms, chemicals, equipment,
+                            or glassware</div>
                     </div>
                     <div class="dashboard-card" onclick="navigateTo('professor_history.html')">
                         <div class="card-icon"></div>
@@ -123,7 +132,7 @@
     </div>
     <script src="js/main.js"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', function () {
             const user = JSON.parse(sessionStorage.getItem('user') || '{}');
             if (user.username && user.role === 'Professor') {
                 const firstName = user.firstname || 'Professor';
@@ -139,4 +148,5 @@
         });
     </script>
 </body>
+
 </html>
