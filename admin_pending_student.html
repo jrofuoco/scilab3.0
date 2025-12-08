@@ -108,6 +108,7 @@
                                 <th>Resources</th>
                                 <th>Year & Section</th>
                                 <th>Professor</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -124,139 +125,6 @@
         </main>
     </div>
     <script src="js/main.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function() {
-            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-            if (user.username && user.role === 'Admin') {
-                const firstName = user.firstname || 'System';
-                const lastName = user.lastname || 'Admin';
-                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
-                const fullName = firstName + ' ' + lastName;
-                document.getElementById('userName').textContent = fullName;
-                if (document.getElementById('userNameSidebar')) {
-                    document.getElementById('userNameSidebar').textContent = fullName;
-                }
-                if (document.getElementById('userAvatar')) {
-                    document.getElementById('userAvatar').textContent = initials;
-                }
-                loadPendingReservations();
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        function loadPendingReservations() {
-            // Sample data for visualization
-            const reservations = [
-                {
-                    id: 1,
-                    studentName: 'Jane Doe',
-                    date: '2024-02-25',
-                    startTime: '10:00',
-                    endTime: '12:00',
-                    resources: 'Hydrochloric Acid (1x), Flask 500ml (2x), Test Tube (10x)',
-                    year: '2nd Year',
-                    section: 'A',
-                    professor: 'Dr. John Smith'
-                },
-                {
-                    id: 2,
-                    studentName: 'Michael Brown',
-                    date: '2024-02-26',
-                    startTime: '09:00',
-                    endTime: '11:00',
-                    resources: 'Sodium Hydroxide (1x), Beaker 250ml (5x), Hot Plate (1x)',
-                    year: '3rd Year',
-                    section: 'B',
-                    professor: 'Dr. Emily Chen'
-                },
-                {
-                    id: 3,
-                    studentName: 'Sarah Johnson',
-                    date: '2024-02-27',
-                    startTime: '14:00',
-                    endTime: '16:00',
-                    resources: 'Test Tube (15x), Beaker 250ml (4x), Microscope (1x)',
-                    year: '1st Year',
-                    section: 'C',
-                    professor: 'Dr. Robert Taylor'
-                },
-                {
-                    id: 4,
-                    studentName: 'James Wilson',
-                    date: '2024-02-28',
-                    startTime: '10:00',
-                    endTime: '12:00',
-                    resources: 'Flask 500ml (3x), Sodium Chloride (2x), Centrifuge (1x)',
-                    year: '2nd Year',
-                    section: 'A',
-                    professor: 'Dr. Sarah Martinez'
-                },
-                {
-                    id: 5,
-                    studentName: 'Lisa Anderson',
-                    date: '2024-03-01',
-                    startTime: '13:00',
-                    endTime: '15:00',
-                    resources: 'Beaker 250ml (6x), Test Tube (12x), Hydrochloric Acid (1x)',
-                    year: '4th Year',
-                    section: 'D',
-                    professor: 'Dr. Michael Johnson'
-                },
-                {
-                    id: 6,
-                    studentName: 'David Lee',
-                    date: '2024-03-02',
-                    startTime: '08:00',
-                    endTime: '10:00',
-                    resources: 'Microscope (2x), Hot Plate (1x), Flask 500ml (2x)',
-                    year: '3rd Year',
-                    section: 'B',
-                    professor: 'Dr. Emily Chen'
-                }
-            ];
-
-            const tbody = document.getElementById('reservationsTable');
-            if (reservations.length === 0) {
-                document.getElementById('emptyState').style.display = 'block';
-                tbody.innerHTML = '';
-            } else {
-                document.getElementById('emptyState').style.display = 'none';
-                tbody.innerHTML = reservations.map(res => `
-                    <tr>
-                        <td>${res.studentName}</td>
-                        <td>${res.date}</td>
-                        <td>${res.startTime} - ${res.endTime}</td>
-                        <td>${res.resources}</td>
-                        <td>${res.year} - ${res.section}</td>
-                        <td>${res.professor}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-approve" onclick="approveReservation(${res.id})">Approve</button>
-                                <button class="btn btn-decline" onclick="declineReservation(${res.id})">Decline</button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-        }
-
-        function approveReservation(id) {
-            if (confirm('Are you sure you want to approve this reservation?')) {
-                // This will be connected to PHP backend
-                // Update inventory quantities
-                alert('Reservation approved!');
-                loadPendingReservations();
-            }
-        }
-
-        function declineReservation(id) {
-            if (confirm('Are you sure you want to decline this reservation?')) {
-                // This will be connected to PHP backend
-                alert('Reservation declined.');
-                loadPendingReservations();
-            }
-        }
-    </script>
+    <script src="js/admin_pending_student.js"></script>
 </body>
 </html>
