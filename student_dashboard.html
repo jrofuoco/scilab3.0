@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard - Scilab 3.0 - Science Laboratory Reservation System</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <div class="dashboard-container">
         <!-- Sidebar Navigation -->
@@ -42,12 +44,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="student_history.html" class="nav-link">
-                            <span class="nav-icon"></span>
-                            <span class="nav-text">Reservation History</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a href="student_pending.html" class="nav-link">
                             <span class="nav-icon"></span>
                             <span class="nav-text">Pending Approval</span>
@@ -57,6 +53,12 @@
                         <a href="student_approved.html" class="nav-link">
                             <span class="nav-icon"></span>
                             <span class="nav-text">Approved Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="student_history.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Reservation History</span>
                         </a>
                     </li>
                 </ul>
@@ -84,7 +86,8 @@
                     <div class="dashboard-card" onclick="navigateTo('reservation_student.html')">
                         <div class="card-icon"></div>
                         <div class="card-title">Create New Reservation</div>
-                        <div class="card-description">Make a new reservation for chemicals, equipment, or glassware</div>
+                        <div class="card-description">Make a new reservation for chemicals, equipment, or glassware
+                        </div>
                     </div>
                     <div class="dashboard-card" onclick="navigateTo('student_history.html')">
                         <div class="card-icon"></div>
@@ -107,7 +110,7 @@
     </div>
     <script src="js/main.js"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', function () {
             const user = JSON.parse(sessionStorage.getItem('user') || '{}');
             if (user.username && user.role === 'Student') {
                 const firstName = user.firstname || 'Student';
@@ -123,4 +126,5 @@
         });
     </script>
 </body>
+
 </html>

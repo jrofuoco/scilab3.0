@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservation History - Student</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <div class="dashboard-container">
         <!-- Sidebar Navigation -->
@@ -42,12 +44,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="student_history.html" class="nav-link active">
-                            <span class="nav-icon"></span>
-                            <span class="nav-text">Reservation History</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a href="student_pending.html" class="nav-link">
                             <span class="nav-icon"></span>
                             <span class="nav-text">Pending Approval</span>
@@ -57,6 +53,12 @@
                         <a href="student_approved.html" class="nav-link">
                             <span class="nav-icon"></span>
                             <span class="nav-text">Approved Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="student_history.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Reservation History</span>
                         </a>
                     </li>
                 </ul>
@@ -72,108 +74,40 @@
         <!-- Main Content -->
         <main class="dashboard-main">
             <div class="dashboard-header">
-            <h1>Reservation History</h1>
-            <div class="user-info">
-                <span id="userName">Student Name</span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <h1>Reservation History</h1>
+                <div class="user-info">
+                    <span id="userName">Student Name</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
             </div>
-        </div>
-        <div class="dashboard-content">
-            <!-- <a href="student_dashboard.html" class="back-btn">← Back to Dashboard</a> -->
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Resources</th>
-                            <th>Year & Section</th>
-                            <th>Professor</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="reservationsTable">
-                        <!-- Data will be loaded dynamically -->
-                    </tbody>
-                </table>
-            </div>
-            <div id="emptyState" class="empty-state" style="display: none;">
-                <div class="empty-state-icon">📋</div>
-                <div class="empty-state-text">No reservations found</div>
-            </div>
+            <div class="dashboard-content">
+                <!-- <a href="student_dashboard.html" class="back-btn">← Back to Dashboard</a> -->
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Resources</th>
+                                <th>Year & Section</th>
+                                <th>Professor</th>
+                                <th>Status</th>
+                                <!-- <th>Actions</th> -->
+                            </tr>
+                        </thead>
+                        <tbody id="reservationsTable">
+                            <!-- Data will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📋</div>
+                    <div class="empty-state-text">No reservations found</div>
+                </div>
         </main>
     </div>
     <script src="js/main.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function() {
-            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-            if (user.username && user.role === 'Student') {
-                const fullName = user.firstname + ' ' + user.lastname;
-                document.getElementById('userName').textContent = fullName;
-                document.getElementById('userNameSidebar').textContent = fullName;
-                document.getElementById('userAvatar').textContent = (user.firstname.charAt(0) + user.lastname.charAt(0)).toUpperCase();
-                loadReservations();
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        function loadReservations() {
-            // This will be connected to PHP backend
-            // Sample data for demonstration
-            const reservations = [
-                {
-                    id: 1,
-                    date: '2024-01-15',
-                    startTime: '09:00',
-                    endTime: '11:00',
-                    resources: 'Sodium Chloride (2x), Beaker 250ml (5x)',
-                    year: '2nd Year',
-                    section: 'A',
-                    professor: 'Dr. John Smith',
-                    status: 'Completed'
-                },
-                {
-                    id: 2,
-                    date: '2024-01-20',
-                    startTime: '14:00',
-                    endTime: '16:00',
-                    resources: 'Microscope (1x), Test Tube (10x)',
-                    year: '2nd Year',
-                    section: 'A',
-                    professor: 'Dr. John Smith',
-                    status: 'Completed'
-                }
-            ];
-
-            const tbody = document.getElementById('reservationsTable');
-            if (reservations.length === 0) {
-                document.getElementById('emptyState').style.display = 'block';
-                tbody.innerHTML = '';
-            } else {
-                document.getElementById('emptyState').style.display = 'none';
-                tbody.innerHTML = reservations.map(res => `
-                    <tr>
-                        <td>${res.date}</td>
-                        <td>${res.startTime} - ${res.endTime}</td>
-                        <td>${res.resources}</td>
-                        <td>${res.year} - ${res.section}</td>
-                        <td>${res.professor}</td>
-                        <td><span style="color: #31CB00; font-weight: 600;">${res.status}</span></td>
-                        <td>
-                            <button class="btn btn-view" onclick="viewDetails(${res.id})">View</button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-        }
-
-        function viewDetails(id) {
-            alert('Viewing reservation details for ID: ' + id);
-            // This will open a detailed view modal
-        }
-    </script>
+    <script src="js/student_history.js"></script>
 </body>
-</html>
 
+</html>

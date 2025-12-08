@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Reservation - Student</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <div class="dashboard-container">
         <!-- Sidebar Navigation -->
@@ -42,12 +44,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="student_history.html" class="nav-link">
-                            <span class="nav-icon"></span>
-                            <span class="nav-text">Reservation History</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a href="student_pending.html" class="nav-link">
                             <span class="nav-icon"></span>
                             <span class="nav-text">Pending Approval</span>
@@ -57,6 +53,12 @@
                         <a href="student_approved.html" class="nav-link">
                             <span class="nav-icon"></span>
                             <span class="nav-text">Approved Reservations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="student_history.html" class="nav-link">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Reservation History</span>
                         </a>
                     </li>
                 </ul>
@@ -79,86 +81,84 @@
                 </div>
             </div>
             <div class="dashboard-content">
-            <!-- <a href="student_dashboard.html" class="back-btn">← Back to Dashboard</a> -->
-            <div class="reservation-container">
-                <div class="form-section">
-                    <h3 class="section-title">Available Resources</h3>
-                    <div class="inventory-tabs">
-                        <button class="tab-btn active" onclick="switchTab('chemicals')">Chemicals</button>
-                        <button class="tab-btn" onclick="switchTab('equipment')">Equipment</button>
-                        <button class="tab-btn" onclick="switchTab('glassware')">Glassware</button>
-                    </div>
-                    
-                    <div id="chemicals" class="tab-content active">
-                        <div class="resource-grid" id="chemicalsGrid">
-                            <!-- Resources will be loaded dynamically -->
+                <!-- <a href="student_dashboard.html" class="back-btn">← Back to Dashboard</a> -->
+                <div class="reservation-container">
+                    <div class="form-section">
+                        <h3 class="section-title">Available Resources</h3>
+                        <div class="inventory-tabs">
+                            <button class="tab-btn active" onclick="switchTab('chemicals')">Chemicals</button>
+                            <button class="tab-btn" onclick="switchTab('equipment')">Equipment</button>
+                            <button class="tab-btn" onclick="switchTab('glassware')">Glassware</button>
                         </div>
-                    </div>
-                    <div id="equipment" class="tab-content">
-                        <div class="resource-grid" id="equipmentGrid">
-                            <!-- Resources will be loaded dynamically -->
-                        </div>
-                    </div>
-                    <div id="glassware" class="tab-content">
-                        <div class="resource-grid" id="glasswareGrid">
-                            <!-- Resources will be loaded dynamically -->
-                        </div>
-                    </div>
-                </div>
 
-                <div class="cart-section">
-                    <h3 class="section-title">Reservation Cart</h3>
-                    <div id="cartItems">
-                        <div class="empty-state">
-                            <div class="empty-state-text">Your cart is empty. Add resources to get started.</div>
+                        <div id="chemicals" class="tab-content active">
+                            <div class="resource-grid" id="chemicalsGrid">
+                                <!-- Resources will be loaded dynamically -->
+                            </div>
+                        </div>
+                        <div id="equipment" class="tab-content">
+                            <div class="resource-grid" id="equipmentGrid">
+                                <!-- Resources will be loaded dynamically -->
+                            </div>
+                        </div>
+                        <div id="glassware" class="tab-content">
+                            <div class="resource-grid" id="glasswareGrid">
+                                <!-- Resources will be loaded dynamically -->
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-section">
-                    <h3 class="section-title">Reservation Details</h3>
-                    <form id="reservationForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="date">Date *</label>
-                                <input type="date" id="date" name="date" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="startTime">Start Time *</label>
-                                <input type="time" id="startTime" name="startTime" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="endTime">End Time *</label>
-                                <input type="time" id="endTime" name="endTime" required>
+                    <div class="cart-section">
+                        <h3 class="section-title">Reservation Cart</h3>
+                        <div id="cartItems">
+                            <div class="empty-state">
+                                <div class="empty-state-text">Your cart is empty. Add resources to get started.</div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="year">Year *</label>
-                                <select id="year" name="year" required>
-                                    <option value="">Select Year</option>
-                                    <option value="1st Year">1st Year</option>
-                                    <option value="2nd Year">2nd Year</option>
-                                    <option value="3rd Year">3rd Year</option>
-                                    <option value="4th Year">4th Year</option>
-                                </select>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Reservation Details</h3>
+                        <form id="reservationForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="date">Date *</label>
+                                    <input type="date" id="date" name="date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="startTime">Start Time *</label>
+                                    <input type="time" id="startTime" name="startTime" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endTime">End Time *</label>
+                                    <input type="time" id="endTime" name="endTime" required>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="section">Section *</label>
-                                <input type="text" id="section" name="section" placeholder="e.g., A, B, C" required>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="year">Year *</label>
+                                    <select id="year" name="year" required>
+                                        <option value="">Select Year</option>
+                                        <option value="1st Year">1st Year</option>
+                                        <option value="2nd Year">2nd Year</option>
+                                        <option value="3rd Year">3rd Year</option>
+                                        <option value="4th Year">4th Year</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="section">Section *</label>
+                                    <input type="text" id="section" name="section" placeholder="e.g., A, B, C" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="professor">Professor *</label>
+                                    <input type="text" id="professor" name="professor"
+                                        placeholder="e.g., Dr. John Smith" required>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="professor">Professor *</label>
-                                <select id="professor" name="professor" required>
-                                    <option value="">Select Professor</option>
-                                    <!-- Professors will be loaded dynamically -->
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit" class="submit-btn">Submit Reservation</button>
-                    </form>
+                            <button type="submit" class="submit-btn">Submit Reservation</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
             </div>
         </main>
     </div>
@@ -185,8 +185,8 @@
     <script src="js/resources.js"></script>
     <script>
         let cart = [];
-        
-        window.addEventListener('DOMContentLoaded', function() {
+
+        window.addEventListener('DOMContentLoaded', function () {
             const user = JSON.parse(sessionStorage.getItem('user') || '{}');
             if (user.username && user.role === 'Student') {
                 document.getElementById('userNameHeader').textContent = user.firstname + ' ' + user.lastname;
@@ -195,7 +195,6 @@
                 const initials = (user.firstname.charAt(0) + user.lastname.charAt(0)).toUpperCase();
                 document.getElementById('userAvatar').textContent = initials;
                 loadResources();
-                loadProfessors();
             } else {
                 window.location.href = 'index.html';
             }
@@ -209,7 +208,7 @@
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
+
             // Show selected tab
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
@@ -218,7 +217,7 @@
         async function loadResources() {
             // Load resources from database
             const resources = await loadResourcesFromDatabase();
-            
+
             renderResources('chemicals', resources.chemicals);
             renderResources('equipment', resources.equipment);
             renderResources('glassware', resources.glassware);
@@ -285,21 +284,9 @@
             updateCart();
         }
 
-        function loadProfessors() {
-            // This will be connected to PHP backend
-            // For now, using sample data
-            const professors = [
-                { id: 1, name: 'Dr. John Smith' },
-                { id: 2, name: 'Dr. Jane Doe' },
-                { id: 3, name: 'Dr. Robert Johnson' }
-            ];
 
-            const select = document.getElementById('professor');
-            select.innerHTML = '<option value="">Select Professor</option>' + 
-                professors.map(prof => `<option value="${prof.id}">${prof.name}</option>`).join('');
-        }
 
-        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+        document.getElementById('reservationForm').addEventListener('submit', function (e) {
             e.preventDefault();
             if (cart.length === 0) {
                 alert('Please add at least one resource to your cart');
@@ -312,8 +299,7 @@
                 endTime: document.getElementById('endTime').value,
                 year: document.getElementById('year').value,
                 section: document.getElementById('section').value,
-                professor: document.getElementById('professor').value,
-                professorName: document.getElementById('professor').options[document.getElementById('professor').selectedIndex].text
+                professor: document.getElementById('professor').value
             };
 
             showSummary(formData);
@@ -336,7 +322,7 @@
                 </div>
                 <div class="summary-item">
                     <div class="summary-label">Professor:</div>
-                    <div class="summary-value">${formData.professorName}</div>
+                    <div class="summary-value">${formData.professor}</div>
                 </div>
                 <div class="summary-item">
                     <div class="summary-label">Resources:</div>
@@ -350,12 +336,12 @@
 
         async function confirmReservation() {
             const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-            
+
             if (!user.id) {
                 alert('Error: User not found. Please log in again.');
                 return;
             }
-            
+
             const formData = {
                 userId: user.id,
                 date: document.getElementById('date').value,
@@ -396,6 +382,5 @@
         }
     </script>
 </body>
+
 </html>
-
-

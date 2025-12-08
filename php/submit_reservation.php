@@ -33,8 +33,8 @@ try {
     
     // 1. Create the main reservation
     $reservationQuery = "
-        INSERT INTO reservations (user_id, room_id, reservation_date, start_time, end_time, year, section, status)
-        VALUES (:user_id, :room_id, :reservation_date, :start_time, :end_time, :year, :section, 'Pending')
+        INSERT INTO reservations (user_id, room_id, reservation_date, start_time, end_time, year, section, professor, status)
+        VALUES (:user_id, :room_id, :reservation_date, :start_time, :end_time, :year, :section, :professor, 'Pending')
     ";
     
     $resStmt = $pdo->prepare($reservationQuery);
@@ -45,7 +45,8 @@ try {
         ':start_time' => $data['startTime'],
         ':end_time' => $data['endTime'],
         ':year' => !empty($data['year']) ? $data['year'] : null,
-        ':section' => !empty($data['section']) ? $data['section'] : null
+        ':section' => !empty($data['section']) ? $data['section'] : null,
+        ':professor' => !empty($data['professor']) ? $data['professor'] : null
     ]);
     
     $reservationId = $pdo->lastInsertId();
