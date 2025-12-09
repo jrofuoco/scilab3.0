@@ -3,52 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservation History - Admin</title>
+    <title>Monitor Rooms - Admin</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
-        .receipt-item {
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 5px;
-            margin-bottom: 8px;
-            border-left: 3px solid #31CB00;
-        }
-        .receipt-item.unreturned {
-            border-left-color: #ff9800;
-            background: #fff3cd;
-        }
-        .item-return-status {
-            font-size: 0.85rem;
-            margin-top: 5px;
-            color: #666;
-        }
-        .unreturned-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            background-color: #ff9800;
-            color: white;
-            border-radius: 3px;
+        .room-status-badge {
+            padding: 4px 10px;
+            border-radius: 999px;
             font-size: 0.8rem;
             font-weight: 600;
-            margin-left: 10px;
         }
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .status-completed {
+        .room-status-available {
             background-color: #d4edda;
             color: #155724;
         }
-        .status-partial {
+        .room-status-occupied {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .room-status-maintenance {
             background-color: #fff3cd;
             color: #856404;
-        }
-        .status-returned {
-            background-color: #d1ecf1;
-            color: #0c5460;
         }
     </style>
 </head>
@@ -82,7 +56,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="admin_history.html" class="nav-link active">
+                        <a href="admin_history.html" class="nav-link">
                             <span class="nav-icon"></span>
                             <span class="nav-text">Reservation History</span>
                         </a>
@@ -123,6 +97,12 @@
                             <span class="nav-text">Unreturned Items</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="admin_monitor_room.html" class="nav-link active">
+                            <span class="nav-icon"></span>
+                            <span class="nav-text">Monitor Rooms</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
@@ -136,7 +116,7 @@
         <!-- Main Content -->
         <main class="dashboard-main">
             <div class="dashboard-header">
-                <h1>Reservation History</h1>
+                <h1>Monitor Rooms</h1>
                 <div class="user-info">
                     <span id="userName">Admin Name</span>
                     <button class="logout-btn" onclick="logout()">Logout</button>
@@ -144,53 +124,32 @@
             </div>
             <div class="dashboard-content">
                 <a href="admin_dashboard.html" class="back-btn">← Back to Dashboard</a>
-            <div class="search-bar">
-                <input type="date" id="searchDate" placeholder="Search by date">
-                <button onclick="searchByDate()">Search</button>
-                <button onclick="clearSearch()">Clear</button>
-            </div>
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>User</th>
-                            <th>User Type</th>
-                            <th>Resources</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="reservationsTable">
-                        <!-- Data will be loaded dynamically -->
-                    </tbody>
-                </table>
-            </div>
-            <div id="emptyState" class="empty-state" style="display: none;">
-                <div class="empty-state-icon"></div>
-                <div class="empty-state-text">No reservations found</div>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Room Name</th>
+                                <th>Capacity</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roomsTable">
+                            <!-- Filled by admin_monitor_room.js -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="roomsEmptyState" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon"></div>
+                    <div class="empty-state-text">No rooms found</div>
+                </div>
             </div>
         </main>
     </div>
 
-    <!-- Receipt Modal -->
-    <div id="receiptModal" class="modal">
-        <div class="modal-content" style="max-width: 700px;">
-            <div class="modal-header">
-                <h3 class="modal-title">Reservation Receipt</h3>
-                <button class="close-modal" onclick="closeReceiptModal()">&times;</button>
-            </div>
-            <div class="modal-body" id="receiptContent">
-                <!-- Receipt content will be populated here -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeReceiptModal()">Close</button>
-            </div>
-        </div>
-    </div>
-
     <script src="js/main.js"></script>
-    <script src="js/admin_history.js"></script>
+    <script src="js/admin_monitor_room.js"></script>
 </body>
 </html>

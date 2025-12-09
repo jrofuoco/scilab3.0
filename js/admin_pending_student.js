@@ -117,7 +117,7 @@ function approveReservation(id) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Reservation approved! Inventory quantities updated.');
+                alert('Reservation approved!');
                 loadPendingReservations();
             } else {
                 alert('Error approving reservation: ' + data.message);

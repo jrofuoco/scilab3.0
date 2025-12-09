@@ -23,10 +23,9 @@ if (!$data || !isset($data['reservationId']) || !isset($data['adminId'])) {
 try {
     $reservationId = $data['reservationId'];
     $adminId = $data['adminId'];
-    
-    // Start transaction to handle resource allocation
+    // Start transaction to ensure consistent updates
     $pdo->beginTransaction();
-    
+
     // Update the reservation to mark admin approval as 'Approved'
     $query = "
         UPDATE reservations 
@@ -38,16 +37,16 @@ try {
     $stmt->execute([':reservation_id' => $reservationId]);
     
     if ($stmt->rowCount() > 0) {
-        // Deduct resources from inventory
-        deductReservationResources($pdo, $reservationId);
-        
+        // Mark room as occupied (if applicable)
+        occupyRoomForReservation($pdo, $reservationId);
+
         error_log("Admin ID $adminId approved student reservation ID $reservationId");
         
         $pdo->commit();
         
         echo json_encode([
             'success' => true,
-            'message' => 'Student reservation approved successfully. Inventory quantities updated.'
+            'message' => 'Student reservation approved successfully.'
         ]);
     } else {
         $pdo->rollBack();
@@ -66,27 +65,7 @@ try {
     ]);
 }
 
-function deductReservationResources($pdo, $reservationId) {
-    // Deduct lab assets
-    $deductAssetsQuery = "
-        UPDATE lab_assets la
-        INNER JOIN reservation_items ri ON la.asset_id = ri.asset_id
-        SET la.available_stock = la.available_stock - ri.quantity_borrowed
-        WHERE ri.reservation_id = :reservation_id
-    ";
-    $stmt = $pdo->prepare($deductAssetsQuery);
-    $stmt->execute([':reservation_id' => $reservationId]);
-    
-    // Deduct chemicals
-    $deductChemicalsQuery = "
-        UPDATE chemicals c
-        INNER JOIN chemical_usage cu ON c.chemical_id = cu.chemical_id
-        SET c.stock_quantity = c.stock_quantity - cu.quantity_used
-        WHERE cu.reservation_id = :reservation_id
-    ";
-    $stmt = $pdo->prepare($deductChemicalsQuery);
-    $stmt->execute([':reservation_id' => $reservationId]);
-    
+function occupyRoomForReservation($pdo, $reservationId) {
     // Mark room as occupied
     $occupyRoomQuery = "
         UPDATE rooms r

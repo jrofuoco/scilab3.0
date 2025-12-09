@@ -32,11 +32,21 @@ try {
         ':status' => $data['status'],
         ':room_id' => $data['roomId']
     ]);
-    
+
     if ($stmt->rowCount() > 0) {
+        // Mark related reservations for this room as Completed
+        // We only update reservations that are not already Completed
+        // (including NULL status) and whose reservation_date is today or in the past.
+        $res = $pdo->prepare("UPDATE reservations
+                              SET status = 'Completed'
+                              WHERE room_id = :room_id
+                                AND (status IS NULL OR status <> 'Completed')
+                                AND DATE(reservation_date) <= CURDATE()");
+        $res->execute([':room_id' => $data['roomId']]);
+
         echo json_encode([
             'success' => true,
-            'message' => 'Room status updated successfully'
+            'message' => 'Room status and related reservations updated successfully'
         ]);
     } else {
         echo json_encode([

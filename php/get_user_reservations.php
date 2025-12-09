@@ -67,7 +67,9 @@ try {
         LEFT JOIN chemical_usage cu ON r.reservation_id = cu.reservation_id
         LEFT JOIN chemicals c ON cu.chemical_id = c.chemical_id
         LEFT JOIN rooms ro ON r.room_id = ro.room_id
-        WHERE r.user_id = :user_id AND r.admin_approval != 'Completed'
+        WHERE r.user_id = :user_id
+          AND (r.status IS NULL OR r.status <> 'Completed')
+          AND CONCAT(r.reservation_date, ' ', r.end_time) >= NOW()
         GROUP BY r.reservation_id
         ORDER BY r.reservation_date DESC, r.start_time DESC
     ";

@@ -6,7 +6,7 @@
  */
 
 // Database credentials
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'localhost:3307');
 define('DB_NAME', 'scilab_reservation'); // CHANGE THIS
 define('DB_USER', 'root');   // CHANGE THIS
 define('DB_PASS', '');   // CHANGE THIS
