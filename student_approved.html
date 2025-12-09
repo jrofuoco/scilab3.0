@@ -92,7 +92,7 @@
                                 <th>Year & Section</th>
                                 <th>Professor</th>
                                 <th>Status</th>
-                                <th>Actions</th>
+                                <!-- <th>Actions</th> -->
                             </tr>
                         </thead>
                         <tbody id="reservationsTable">
@@ -163,9 +163,6 @@
                             <td>${res.year} - ${res.section}</td>
                             <td>${res.professor}</td>
                             <td><span style="color: ${statusColor}; font-weight: 600;">${res.status}</span></td>
-                            <td>
-                                <button class="btn btn-view" onclick="viewDetails(${res.id})">View</button>
-                            </td>
                         </tr>
                     `;
                 }).join('');

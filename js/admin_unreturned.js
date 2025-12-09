@@ -43,15 +43,18 @@ function loadUnreturnedItems() {
             if (!data.success) {
                 displayItems([]);
                 displayStudents([]);
+                displayProfessors([]);
                 return;
             }
             displayItems(data.items || []);
             displayStudents(data.students_with_unreturned || []);
+            displayProfessors(data.professors_with_unreturned || []);
         })
         .catch(err => {
             console.error('Error loading unreturned items:', err);
             displayItems([]);
             displayStudents([]);
+            displayProfessors([]);
         });
 }
 
@@ -263,6 +266,57 @@ function displayStudents(students) {
                         <div class="student-name">${student.student_name}</div>
                         <div class="student-info">
                             Email: ${student.student_email}
+                        </div>
+                    </div>
+                    ${itemsHtml}
+                </div>
+            `;
+            })
+            .join('')}
+    `;
+}
+
+function displayProfessors(professors) {
+    const container = document.getElementById('professorsList');
+    if (!container) return;
+
+    if (!Array.isArray(professors) || professors.length === 0) {
+        const empty = document.getElementById('professorsEmptyState');
+        if (empty) empty.style.display = 'block';
+        container.innerHTML = '';
+        return;
+    }
+
+    const empty = document.getElementById('professorsEmptyState');
+    if (empty) empty.style.display = 'none';
+
+    container.innerHTML = `
+        <h3 style="color: #152614; margin-bottom: 20px;">Professors with Unreturned Items</h3>
+        ${professors
+            .map(prof => {
+                const itemsHtml = (prof.items || [])
+                    .map(
+                        item => `
+                    <div class="unreturned-item">
+                        <div class="item-info">
+                            <div class="item-name">${item.resource_name} (${item.resource_type})</div>
+                            <div class="item-details">
+                                Borrowed: ${item.borrowed_quantity} | Returned: ${item.returned_quantity} |
+                                <span class="unreturned-qty">Unreturned: ${item.unreturned_quantity}</span> |
+                                Reservation: ${item.reservation_date} ${item.reservation_time}
+                            </div>
+                        </div>
+                    </div>
+                `,
+                    )
+                    .join('');
+
+                return `
+                <div class="student-section">
+                    <div class="student-header">
+                        <div class="student-name">${prof.professor_name}</div>
+                        <div class="student-info">
+                            Email: ${prof.professor_email}
                         </div>
                     </div>
                     ${itemsHtml}

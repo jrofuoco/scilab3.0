@@ -63,8 +63,8 @@ try {
         INNER JOIN reservations r ON ri.reservation_id = r.reservation_id
         INNER JOIN users u ON r.user_id = u.id
         WHERE u.role = 'Student'
-        AND r.professor_approval = 'Approved'
-        AND r.admin_approval IN ('Approved', 'Completed')
+        AND r.status IN ('Pending', 'Ongoing')
+        AND r.admin_approval != 'Completed'
         AND CONCAT(r.reservation_date, ' ', r.end_time) < NOW()
         AND (ri.is_returned = 0 OR ri.quantity_borrowed > COALESCE(ri.quantity_returned, 0))
         ORDER BY r.reservation_date DESC, r.end_time DESC, u.lastname, u.firstname

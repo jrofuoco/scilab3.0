@@ -151,8 +151,10 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="professor">Professor *</label>
-                                    <input type="text" id="professor" name="professor"
-                                        placeholder="e.g., Dr. John Smith" required>
+                                    <select id="professor" name="professor" required>
+                                        <option value="">Select Professor</option>
+                                        <!-- Professors will be populated here -->
+                                    </select>
                                 </div>
                             </div>
                             <button type="submit" class="submit-btn">Submit Reservation</button>
@@ -195,6 +197,7 @@
                 const initials = (user.firstname.charAt(0) + user.lastname.charAt(0)).toUpperCase();
                 document.getElementById('userAvatar').textContent = initials;
                 loadResources();
+                loadProfessors();
             } else {
                 window.location.href = 'index.html';
             }
@@ -221,6 +224,29 @@
             renderResources('chemicals', resources.chemicals);
             renderResources('equipment', resources.equipment);
             renderResources('glassware', resources.glassware);
+        }
+
+        async function loadProfessors() {
+            try {
+                const response = await fetch('php/get_professors.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const professorSelect = document.getElementById('professor');
+                    professorSelect.innerHTML = '<option value="">Select Professor</option>';
+                    
+                    data.professors.forEach(professor => {
+                        const option = document.createElement('option');
+                        option.value = professor.name;
+                        option.textContent = professor.name;
+                        professorSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Error loading professors:', data.message);
+                }
+            } catch (error) {
+                console.error('Error loading professors:', error);
+            }
         }
 
         function addToCart(id, name, type, available) {
