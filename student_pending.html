@@ -106,6 +106,22 @@
                 </div>
         </main>
     </div>
+    <!-- View Details Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Reservation Details</h2>
+                <button class="close-modal" onclick="studentPending.closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be dynamically inserted -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="studentPending.closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/main.js"></script>
     <script src="js/student-pending.js"></script>
 </body>
