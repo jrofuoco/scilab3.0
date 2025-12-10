@@ -107,62 +107,7 @@
         </main>
     </div>
     <script src="js/main.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-            if (user.username && user.role === 'Student') {
-                const fullName = user.firstname + ' ' + user.lastname;
-                document.getElementById('userName').textContent = fullName;
-                document.getElementById('userNameSidebar').textContent = fullName;
-                document.getElementById('userAvatar').textContent = (user.firstname.charAt(0) + user.lastname.charAt(0)).toUpperCase();
-                loadPendingReservations();
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        function loadPendingReservations() {
-            // This will be connected to PHP backend
-            const reservations = [
-                {
-                    id: 3,
-                    date: '2024-02-01',
-                    startTime: '10:00',
-                    endTime: '12:00',
-                    resources: 'Hydrochloric Acid (1x), Flask 500ml (2x)',
-                    year: '2nd Year',
-                    section: 'A',
-                    professor: 'Dr. Jane Doe',
-                    status: 'Pending Professor Approval'
-                }
-            ];
-
-            const tbody = document.getElementById('reservationsTable');
-            if (reservations.length === 0) {
-                document.getElementById('emptyState').style.display = 'block';
-                tbody.innerHTML = '';
-            } else {
-                document.getElementById('emptyState').style.display = 'none';
-                tbody.innerHTML = reservations.map(res => `
-                    <tr>
-                        <td>${res.date}</td>
-                        <td>${res.startTime} - ${res.endTime}</td>
-                        <td>${res.resources}</td>
-                        <td>${res.year} - ${res.section}</td>
-                        <td>${res.professor}</td>
-                        <td><span style="color: #119822; font-weight: 600;">${res.status}</span></td>
-                        <td>
-                            <button class="btn btn-view" onclick="viewDetails(${res.id})">View</button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-        }
-
-        function viewDetails(id) {
-            alert('Viewing reservation details for ID: ' + id);
-        }
-    </script>
+    <script src="js/student-pending.js"></script>
 </body>
 
 </html>

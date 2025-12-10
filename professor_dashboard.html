@@ -131,22 +131,7 @@
         </main>
     </div>
     <script src="js/main.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-            if (user.username && user.role === 'Professor') {
-                const firstName = user.firstname || 'Professor';
-                const lastName = user.lastname || 'User';
-                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
-                const fullName = firstName + ' ' + lastName;
-                document.getElementById('userName').textContent = fullName;
-                document.getElementById('userNameHeader').textContent = fullName;
-                document.getElementById('userAvatar').textContent = initials;
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-    </script>
+    <script src="js/professor-dashboard.js"></script>
 </body>
 
 </html>

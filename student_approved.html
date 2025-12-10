@@ -107,72 +107,7 @@
         </main>
     </div>
     <script src="js/main.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-            if (user.username && user.role === 'Student') {
-                const fullName = user.firstname + ' ' + user.lastname;
-                document.getElementById('userName').textContent = fullName;
-                document.getElementById('userAvatar').textContent = (user.firstname.charAt(0) + user.lastname.charAt(0)).toUpperCase();
-                loadApprovedReservations();
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        function loadApprovedReservations() {
-            // This will be connected to PHP backend
-            const reservations = [
-                {
-                    id: 4,
-                    date: '2024-02-05',
-                    startTime: '13:00',
-                    endTime: '15:00',
-                    resources: 'Centrifuge (1x), Beaker 250ml (3x)',
-                    year: '2nd Year',
-                    section: 'A',
-                    professor: 'Dr. John Smith',
-                    status: 'Approved'
-                },
-                {
-                    id: 5,
-                    date: '2024-02-10',
-                    startTime: '09:00',
-                    endTime: '11:00',
-                    resources: 'Hot Plate (2x)',
-                    year: '2nd Year',
-                    section: 'A',
-                    professor: 'Dr. Jane Doe',
-                    status: 'Declined'
-                }
-            ];
-
-            const tbody = document.getElementById('reservationsTable');
-            if (reservations.length === 0) {
-                document.getElementById('emptyState').style.display = 'block';
-                tbody.innerHTML = '';
-            } else {
-                document.getElementById('emptyState').style.display = 'none';
-                tbody.innerHTML = reservations.map(res => {
-                    const statusColor = res.status === 'Approved' ? '#31CB00' : '#f44336';
-                    return `
-                        <tr>
-                            <td>${res.date}</td>
-                            <td>${res.startTime} - ${res.endTime}</td>
-                            <td>${res.resources}</td>
-                            <td>${res.year} - ${res.section}</td>
-                            <td>${res.professor}</td>
-                            <td><span style="color: ${statusColor}; font-weight: 600;">${res.status}</span></td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-        }
-
-        function viewDetails(id) {
-            alert('Viewing reservation details for ID: ' + id);
-        }
-    </script>
+    <script src="js/student-approved.js"></script>
 </body>
 
 </html>

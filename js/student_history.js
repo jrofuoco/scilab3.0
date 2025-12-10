@@ -17,6 +17,32 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
+ * Get status color based on status value
+ */
+function getStatusColor(status) {
+    const statusColors = {
+        'Pending': '#e74c3c', // Red for pending returns
+        'Pending for return': '#e74c3c', // Red for pending returns
+        'Completed': '#31CB00', // Green for completed
+        'Approved': '#31CB00', // Green for approved
+        'Returned': '#31CB00', // Green for returned
+        'Cancelled': '#f44336', // Red for cancelled
+        'Rejected': '#f44336' // Red for rejected
+    };
+    return statusColors[status] || '#7f8c8d'; // Default gray
+}
+
+/**
+ * Get display text for status
+ */
+function getStatusDisplayText(status) {
+    if (status === 'Pending') {
+        return 'Pending for return';
+    }
+    return status;
+}
+
+/**
  * Load student's reservation history from database
  */
 async function loadReservations(userId) {
@@ -31,17 +57,20 @@ async function loadReservations(userId) {
             tbody.innerHTML = '';
         } else {
             document.getElementById('emptyState').style.display = 'none';
-            tbody.innerHTML = data.reservations.map(res => `
-                <tr>
-                    <td>${res.date}</td>
-                    <td>${res.startTime} - ${res.endTime}</td>
-                    <td>${res.resources}</td>
-                    <td>${res.year} - ${res.section}</td>
-                    <td>${res.professor}</td>
-                    <td><span style="color: #31CB00; font-weight: 600;">${res.status}</span></td>
-
-                </tr>
-            `).join('');
+            tbody.innerHTML = data.reservations.map(res => {
+                const statusColor = getStatusColor(res.status);
+                const statusText = getStatusDisplayText(res.status);
+                return `
+                    <tr>
+                        <td>${res.date}</td>
+                        <td>${res.startTime} - ${res.endTime}</td>
+                        <td>${res.resources}</td>
+                        <td>${res.year} - ${res.section}</td>
+                        <td>${res.professor}</td>
+                        <td><span style="color: ${statusColor}; font-weight: 600;">${statusText}</span></td>
+                    </tr>
+                `;
+            }).join('');
         }
     } catch (error) {
         console.error('Error loading reservations:', error);

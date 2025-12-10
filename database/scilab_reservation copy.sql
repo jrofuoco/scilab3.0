@@ -24,18 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Schema creation
---
-
--- Create database if not exists
-CREATE DATABASE IF NOT EXISTS `scilab_reservation` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-
--- Use the database
-USE `scilab_reservation`;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `chemicals`
 --
 

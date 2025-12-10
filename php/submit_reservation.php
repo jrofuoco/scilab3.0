@@ -56,8 +56,8 @@ try {
 
     // Helper to create a reservation row
     $reservationQuery = "
-        INSERT INTO reservations (user_id, room_id, reservation_date, start_time, end_time, year, section, professor, professor_approval, admin_approval)
-        VALUES (:user_id, :room_id, :reservation_date, :start_time, :end_time, :year, :section, :professor, :professor_approval, 'Pending')
+        INSERT INTO reservations (user_id, room_id, reservation_date, start_time, end_time, year, section, professor, professor_approval, admin_approval, additional_note)
+        VALUES (:user_id, :room_id, :reservation_date, :start_time, :end_time, :year, :section, :professor, :professor_approval, 'Pending', :additional_note)
     ";
 
     $resStmt = $pdo->prepare($reservationQuery);
@@ -74,7 +74,8 @@ try {
             ':year' => !empty($data['year']) ? $data['year'] : null,
             ':section' => !empty($data['section']) ? $data['section'] : null,
             ':professor' => !empty($data['professor']) ? $data['professor'] : null,
-            ':professor_approval' => $professorApproval
+            ':professor_approval' => $professorApproval,
+            ':additional_note' => !empty($data['additionalNote']) ? $data['additionalNote'] : null
         ]);
 
         $itemsReservationId = $pdo->lastInsertId();
@@ -172,7 +173,8 @@ try {
                 ':year' => !empty($data['year']) ? $data['year'] : null,
                 ':section' => !empty($data['section']) ? $data['section'] : null,
                 ':professor' => !empty($data['professor']) ? $data['professor'] : null,
-                ':professor_approval' => $professorApproval
+                ':professor_approval' => $professorApproval,
+                ':additional_note' => !empty($data['additionalNote']) ? $data['additionalNote'] : null
             ]);
 
             $roomReservationId = $pdo->lastInsertId();
