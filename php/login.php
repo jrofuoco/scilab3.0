@@ -7,6 +7,8 @@ $data = json_decode(file_get_contents('php://input'), true);
 $username = $data['username'] ?? '';
 $password = $data['password'] ?? '';
 
+//tangina nyo
+
 if (!$username || !$password) {
     echo json_encode(['success' => false, 'message' => 'Missing username or password.']);
     exit;
