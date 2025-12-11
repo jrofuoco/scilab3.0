@@ -28,9 +28,27 @@ class StudentPendingReservations {
         if (user.username && user.role === 'Student') {
             this.loadUserInfo();
             this.loadPendingReservations();
+            this.setupModalListeners();
         } else {
             window.location.href = 'index.html';
         }
+    }
+
+    setupModalListeners() {
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('viewModal');
+            if (event.target === modal) {
+                this.closeModal();
+            }
+        });
+
+        // Close modal when pressing Escape key
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                this.closeModal();
+            }
+        });
     }
 
     loadUserInfo() {
@@ -126,11 +144,55 @@ class StudentPendingReservations {
         // Find the reservation data
         const reservation = this.reservations.find(r => r.id === reservationId);
         if (reservation) {
-            // You can implement a modal or redirect to a details page
-            alert(`Reservation Details:\n\nID: ${reservation.id}\nDate: ${reservation.date}\nTime: ${reservation.start_time} - ${reservation.end_time}\nResources: ${reservation.resources}\nStatus: ${reservation.status}`);
+            this.showModal(reservation);
         } else {
             alert('Reservation not found');
         }
+    }
+
+    showModal(reservation) {
+        const modal = document.getElementById('viewModal');
+        const modalBody = document.getElementById('modalBody');
+        
+        const statusColor = this.getStatusColor(reservation.status);
+        
+        modalBody.innerHTML = `
+            <div class="summary-item">
+                <div class="summary-label">Reservation ID</div>
+                <div class="summary-value">#${reservation.id}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Date</div>
+                <div class="summary-value">${reservation.date}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Time</div>
+                <div class="summary-value">${reservation.start_time} - ${reservation.end_time}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Resources</div>
+                <div class="summary-value">${reservation.resources || 'No resources'}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Year & Section</div>
+                <div class="summary-value">${reservation.year ? `${reservation.year} - ${reservation.section || ''}` : 'N/A'}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Professor</div>
+                <div class="summary-value">${reservation.professor_name || 'N/A'}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Status</div>
+                <div class="summary-value" style="color: ${statusColor}; font-weight: 600;">${reservation.status}</div>
+            </div>
+        `;
+        
+        modal.style.display = 'block';
+    }
+
+    closeModal() {
+        const modal = document.getElementById('viewModal');
+        modal.style.display = 'none';
     }
 
     showError(message) {
