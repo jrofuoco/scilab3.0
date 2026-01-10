@@ -6,11 +6,14 @@
  */
 
 // Database credentials
-define('DB_HOST', 'localhost:3307');
+define('DB_HOST', 'localhost:3306');
 define('DB_NAME', 'scilab_reservation'); // CHANGE THIS
 define('DB_USER', 'root');   // CHANGE THIS
 define('DB_PASS', '');   // CHANGE THIS
 define('DB_CHARSET', 'utf8mb4');
+
+
+//TANGINANYONG LAHAT
 
 $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
 $options = [
