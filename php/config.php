@@ -12,9 +12,6 @@ define('DB_USER', 'root');   // CHANGE THIS
 define('DB_PASS', '');   // CHANGE THIS
 define('DB_CHARSET', 'utf8mb4');
 
-
-//TANGINANYONG LAHAT
-
 $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
